@@ -10,10 +10,14 @@ from sped.core.types import Field, FieldDef, Record, RegisterDef
 
 def test_coerce_decimal_and_integer() -> None:
     money = FieldDef(1, "VL_ITEM", "N", 10, False, 2)
-    assert money.coerce("10000") == Decimal("100.00")
-    assert money.coerce("-10000") == Decimal("-100.00")
+    # C2: Guia Prático EFD ICMS/IPI — corpo inteiro não sofre escalamento;
+    # "10000" em N(10,2) vale 10000,00, não 100,00.
+    assert money.coerce("10000") == Decimal("10000.00")
+    assert money.coerce("-10000") == Decimal("-10000.00")
     assert money.coerce("123,45") == Decimal("123.45")
-    assert money.coerce("123.45") == Decimal("123.45")
+    # M1: o separador decimal oficial é a vírgula; ponto permanece cru para
+    # ser rejeitado pelo validador de campo.
+    assert money.coerce("123.45") == "123.45"
     assert money.coerce("") is None
     assert money.coerce("abc") == "abc"
 

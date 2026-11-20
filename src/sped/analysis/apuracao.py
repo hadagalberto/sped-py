@@ -220,12 +220,14 @@ def compute_apuracao(records: Iterable[Record], *, layout: Layout) -> ApuracaoRe
 
 
 def _format_raw(value: Decimal | str, dec: int) -> str:
-    """Formato numérico SPED: dígitos sem separador, casas decimais implícitas."""
+    """Formato numérico SPED: vírgula decimal, sem casas implícitas."""
     if isinstance(value, str):
         return value
     if dec == 0:
         return str(int(value.to_integral_value()))
-    return f"{value:.{dec}f}".replace(".", "")
+    text = f"{value:.{dec}f}"
+    integral, _, fractional = text.partition(".")
+    return f"{integral},{fractional}"
 
 
 def _replace_field(record: Record, layout: Layout, field_name: str, raw: str) -> Record:

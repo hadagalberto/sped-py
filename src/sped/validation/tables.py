@@ -81,6 +81,55 @@ def valid_cfop(value: str) -> bool:
     return value in cfop_codes() and value not in cfop_title_codes()
 
 
+#: Pesos oficiais do dígito verificador (Receita Federal, CNPJ/CPF).
+_CNPJ_WEIGHTS: Final[tuple[tuple[int, ...], tuple[int, ...]]] = (
+    (5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2),
+    (6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2),
+)
+_CPF_WEIGHTS: Final[tuple[tuple[int, ...], tuple[int, ...]]] = (
+    tuple(range(10, 1, -1)),
+    tuple(range(11, 1, -1)),
+)
+
+
+def _check_digits(
+    value: str,
+    weights: tuple[tuple[int, ...], tuple[int, ...]],
+    positions: tuple[int, int],
+    *,
+    cnpj: bool,
+) -> bool:
+    """Validate two módulo-11 check digits (Receita Federal, CNPJ/CPF)."""
+    for factors, position in zip(weights, positions, strict=True):
+        total = sum(
+            int(digit) * weight
+            for digit, weight in zip(value[: len(factors)], factors, strict=True)
+        )
+        if cnpj:
+            remainder = total % 11
+            expected = 0 if remainder < 2 else 11 - remainder
+        else:
+            remainder = total * 10 % 11
+            expected = 0 if remainder == 10 else remainder
+        if int(value[position]) != expected:
+            return False
+    return True
+
+
+def valid_cnpj(value: str) -> bool:
+    """True for a 14-digit CNPJ whose two check digits are correct."""
+    if len(value) != 14 or not value.isdigit() or len(set(value)) == 1:
+        return False
+    return _check_digits(value, _CNPJ_WEIGHTS, (12, 13), cnpj=True)
+
+
+def valid_cpf(value: str) -> bool:
+    """True for an 11-digit CPF whose two check digits are correct."""
+    if len(value) != 11 or not value.isdigit() or len(set(value)) == 1:
+        return False
+    return _check_digits(value, _CPF_WEIGHTS, (9, 10), cnpj=False)
+
+
 def table_sources() -> dict[str, str]:
     """Return the official source URL of each bundled table."""
     return {name: metadata(name)["source_url"] for name in ("cfop", "ncm", "cst")}

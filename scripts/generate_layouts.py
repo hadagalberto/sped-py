@@ -34,6 +34,7 @@ Uso::
 from __future__ import annotations
 
 import argparse
+import importlib
 import json
 import re
 import sys
@@ -44,8 +45,6 @@ from collections.abc import Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Final
-
-import pdfplumber
 
 ROOT: Final = Path(__file__).resolve().parent.parent
 CACHE: Final = ROOT / "tmp" / "pdf"
@@ -269,7 +268,15 @@ def parse_docx(path: Path) -> dict[str, ParsedRegister]:
 
 
 def parse_pdf(path: Path) -> dict[str, ParsedRegister]:
-    """Extrai tabelas de um guia/manual oficial PDF por geometria de células."""
+    """Extrai tabelas de um guia/manual oficial PDF por geometria de células.
+
+    ``pdfplumber`` é dependência opcional (extra ``[tools]``): importá-la aqui
+    mantém o módulo importável — e o mypy verificável — sem ela instalada.
+    """
+    try:
+        pdfplumber: Any = importlib.import_module("pdfplumber")
+    except ModuleNotFoundError as exc:
+        raise RuntimeError("instale o extra [tools] para gerar leiautes") from exc
     registers: dict[str, ParsedRegister] = {}
     current = ""
     with pdfplumber.open(str(path)) as pdf:

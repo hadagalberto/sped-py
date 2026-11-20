@@ -49,8 +49,9 @@ def test_summarize_cfop(efd_file: Path) -> None:
     row = summary.rows[0]
     assert row.value == "1101"
     assert row.count == 1
-    assert row.totals["VL_ITEM"] == Decimal("100.00")
-    assert str(summary.grand_totals["VL_ICMS"]) == "100.00"
+    # C2: SPED não tem decimais implícitos — "10000" em N(15,2) é 10000,00.
+    assert row.totals["VL_ITEM"] == Decimal("10000.00")
+    assert summary.grand_totals["VL_ICMS"] == Decimal("10000")
     assert summary.as_dict()["dimensao"] == "CFOP"
 
 

@@ -24,7 +24,8 @@ def test_typed_values(efd_file: Path) -> None:
     with SpedReader(efd_file) as reader:
         c170 = next(record for record in reader if record.code == "C170")
     assert c170.get("COD_ITEM") == "PRODUTO001"
-    assert c170.get("QTD") == Decimal("0.00001")
+    # C2: SPED não escala o corpo inteiro de campos N com dec > 0.
+    assert c170.get("QTD") == Decimal("1")
     assert c170.raw_get("COD_ITEM") == "PRODUTO001"
 
 

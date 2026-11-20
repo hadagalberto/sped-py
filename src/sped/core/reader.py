@@ -96,7 +96,7 @@ class SpedParseError(ValueError):
         self.message = message
 
 
-def validate_field(  # noqa: PLR0912, PLR0911
+def validate_field(  # noqa: PLR0911
     definition: FieldDef,
     raw: str,
     *,
@@ -117,17 +117,16 @@ def validate_field(  # noqa: PLR0912, PLR0911
         return f"{label}: tamanho {len(raw)} excede {definition.size}"
     if definition.ftype == "N":
         body = raw[1:] if raw.startswith("-") else raw
-        if body.count(",") > 1 or body.count(".") > 1:
+        # The official separator is the comma. A dot is never valid in a
+        # SPED numeric field, and an integer field cannot carry a comma.
+        if "." in body or body.count(",") > 1 or (definition.dec == 0 and "," in body):
             return f"{label}: número inválido {raw!r}"
         candidate = body.replace(",", ".")
-        if definition.dec > 0 and "." in candidate:
+        if definition.dec > 0 and "," in body:
             integral, _, fractional = candidate.partition(".")
             valid = (
                 integral.isdigit() and fractional.isdigit() and len(fractional) <= definition.dec
             )
-        elif definition.dec == 0 and "." in candidate:
-            integral, _, fractional = candidate.partition(".")
-            valid = integral.isdigit() and (not fractional or fractional.isdigit())
         else:
             valid = bool(candidate) and candidate.isdigit()
         if not valid:

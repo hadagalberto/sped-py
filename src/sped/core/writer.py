@@ -20,8 +20,16 @@ OutputRecord: TypeAlias = tuple[str, tuple[str, ...]]
 
 
 def format_line(code: str, values: Iterable[str]) -> str:
-    """Format a register code and its raw values as ``|REG|...|``."""
-    return "|" + "|".join((code, *values)) + "|"
+    """Format a register code and its raw values as ``|REG|...|``.
+
+    ``|`` is the field delimiter defined by the SPED layout, so it cannot be
+    part of a register code or of a value: accepting it would silently emit a
+    file whose fields are shifted by one.
+    """
+    fields = (code, *values)
+    if any("|" in field for field in fields):
+        raise ValueError("caractere '|' não pode aparecer dentro de registro ou valor")
+    return "|" + "|".join(fields) + "|"
 
 
 def as_output(record: Record | OutputRecord | str) -> OutputRecord:
@@ -68,6 +76,8 @@ class _TotalsWriter:
         self.available = frozenset(layout.registers) if layout is not None else None
         self.layout = layout
         self.counts: Counter[str] = Counter()
+        #: Register codes in order of first appearance (dict insertion order).
+        self.order: list[str] = []
         self.total_lines = 0
         self.block = ""
         self.block_count = 0
@@ -75,6 +85,12 @@ class _TotalsWriter:
 
     def _exists(self, code: str) -> bool:
         return self.available is None or code in self.available
+
+    def _count(self, code: str) -> None:
+        """Count one occurrence, remembering where the code first appeared."""
+        if code not in self.counts:
+            self.order.append(code)
+        self.counts[code] += 1
 
     def emit_struct(self, code: str, values: tuple[str, ...]) -> None:
         """Emit a generated structural record, padding optional trailing fields.
@@ -99,7 +115,7 @@ class _TotalsWriter:
         closing = f"{self.block}990"
         if self._exists(closing):
             self.emit_struct(closing, (str(self.block_count + 1),))
-            self.counts[closing] += 1
+            self._count(closing)
         self.block = ""
         self.block_count = 0
 
@@ -112,11 +128,11 @@ class _TotalsWriter:
         if code == "9001":
             self.has_9001 = True
             self.emit(code, values)
-            self.counts[code] += 1
+            self._count(code)
             return
         if is_block_closing(code) and self._exists(code):
             self.emit_struct(code, (str(self.block_count + 1),))
-            self.counts[code] += 1
+            self._count(code)
             self.block = ""
             self.block_count = 0
             return
@@ -125,7 +141,7 @@ class _TotalsWriter:
             self.close_block()
         self.block = current
         self.block_count += 1
-        self.counts[code] += 1
+        self._count(code)
         self.emit(code, values)
 
     def finish(self) -> None:
@@ -134,16 +150,30 @@ class _TotalsWriter:
         self.close_block()
         if not self.has_9001 and self._exists("9001"):
             self.emit_struct("9001", ())
-            self.counts["9001"] += 1
-        if self._exists("9990"):
-            self.counts["9990"] = 1
+            self._count("9001")
+        # Guia Prático EFD ICMS/IPI v3.2.4, registro 9900: "Todos os registros
+        # referenciados neste arquivo, inclusive os posteriores a este
+        # registro, devem ter uma linha totalizadora". Isso inclui o próprio
+        # 9900, o 9990 e o 9999. Manual da ECF (bloco 9) é explícito quanto a
+        # 9900/9990/9999.
+        for code in ("9900", "9990", "9999"):
+            if self._exists(code):
+                self._count(code)
         if self._exists("9900"):
-            for code in sorted(self.counts):
-                if code in {"9900", "9999"}:
-                    continue
+            # Cada tipo de registro (inclusive 9900) tem exatamente uma linha.
+            self.counts["9900"] = len(self.order)
+            for code in self.order:
                 self.emit_struct("9900", (code, str(self.counts[code])))
         if self._exists("9990"):
-            block9_count = 1 + len([c for c in self.counts if c not in {"9900", "9999"}]) + 1
+            # 9990.QTD_LIN_9 = linhas 9900 + abertura 9001 + o próprio 9990 +
+            # o 9999 (o Guia determina que o 9999 entra na soma embora não
+            # pertença ao bloco 9).
+            block9_count = (
+                len(self.order)
+                + self.counts.get("9001", 0)
+                + self.counts.get("9990", 0)
+                + self.counts.get("9999", 0)
+            )
             self.emit_struct("9990", (str(block9_count),))
         if self._exists("9999"):
             self.emit_struct("9999", (str(self.total_lines + 1),))

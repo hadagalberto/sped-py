@@ -111,6 +111,7 @@ def test_typed_values_available_in_nodes(efd_file: Path) -> None:
     with SpedReader(efd_file) as reader:
         node = next(node for node in RecordTree(reader, reader.layout) if node.code == "C170")
     assert node.record.get("COD_ITEM") == "PRODUTO001"
-    assert node.record.get("QTD") == Decimal("0.00001")
+    # C2: sem decimais implícitos, "1" em N(...,5) é 1, não 0,00001.
+    assert node.record.get("QTD") == Decimal("1")
     assert isinstance(node.record.fields[0], Field)
     assert isinstance(node.record.fields[0].definition, FieldDef)

@@ -347,6 +347,11 @@ BROKEN_SPECS: Final[dict[str, tuple[Mutation, ...]]] = {
     "bad_e110_recolher": (Mutation("set", "E110", "VL_ICMS_RECOLHER", "50000"),),
     "bad_e110_transportar": (Mutation("set", "E110", "VL_SLD_CREDOR_TRANSPORTAR", "50000"),),
     "bad_9900_count": (Mutation("set", "9900", "QTD_REG_BLC", "999"),),
+    "wrong_x990_count": (Mutation("set", "0990", "QTD_LIN_0", "999"),),
+    "wrong_9990_count": (Mutation("set", "9990", "QTD_LIN_9", "888"),),
+    "invalid_cnpj": (Mutation("set", "0000", "CNPJ", "12345678000196"),),
+    "cfop_oper_mismatch": (Mutation("set", "C100", "IND_OPER", "1"),),
+    "orphan_c170": (Mutation("before", "C170", anchor="C100"),),
     "bad_m210_bc": (Mutation("set", "M210", "VL_BC_CONT_AJUS", "20000"),),
     "bad_m210_per": (Mutation("set", "M210", "VL_CONT_PER", "20000"),),
     "bad_m610_bc": (Mutation("set", "M610", "VL_BC_CONT_AJUS", "20000"),),
@@ -376,7 +381,30 @@ def _field_index(layout_code: str, field: str, options: SyntheticOptions) -> int
         raise AssertionError(f"campo {field} não existe em {layout_code}") from None
 
 
-def _apply_mutation(lines: list[str], mutation: Mutation, options: SyntheticOptions) -> list[str]:
+def _fix_block_counts(lines: list[str], options: SyntheticOptions) -> list[str]:
+    """Regenerate structural records after a mutation that moves lines.
+
+    Only the ordering defect under test is kept; x990/9900/9999 stay correct so
+    the variant does not accidentally trigger unrelated structural rules.
+    """
+    from sped.core.encoding import split_line  # noqa: PLC0415
+
+    layout = load_layout(options.cod_ver, options.obrigacao)
+    buffer = io.BytesIO()
+    records = [split for line in lines if (split := split_line(line))]
+    write(
+        records,
+        buffer,
+        encoding=options.encoding,
+        line_ending=options.line_ending,
+        layout=layout,
+    )
+    return buffer.getvalue().decode(options.encoding).splitlines()
+
+
+def _apply_mutation(  # noqa: PLR0911
+    lines: list[str], mutation: Mutation, options: SyntheticOptions
+) -> list[str]:
     action, code = mutation.action, mutation.code
     if action == "unframe":
         lines[0] = lines[0][:-1]
@@ -397,7 +425,15 @@ def _apply_mutation(lines: list[str], mutation: Mutation, options: SyntheticOpti
         lines.remove(line)
         anchor = next(i for i, item in enumerate(lines) if item.startswith(f"|{mutation.anchor}|"))
         lines.insert(anchor + 1, line)
-        return lines
+        # Moving a cadastro across blocks changes the block line counts; keep
+        # them correct so the variant isolates the "declared after use" defect.
+        return _fix_block_counts(lines, options)
+    if action == "before":
+        line = next(line for line in lines if line.startswith(f"|{code}|"))
+        lines.remove(line)
+        anchor = next(i for i, item in enumerate(lines) if item.startswith(f"|{mutation.anchor}|"))
+        lines.insert(anchor, line)
+        return _fix_block_counts(lines, options)
     if action == "set":
         index = next(i for i, line in enumerate(lines) if line.startswith(f"|{code}|"))
         parts = lines[index].split("|")

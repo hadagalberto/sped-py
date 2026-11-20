@@ -1,9 +1,15 @@
-"""Contexto imutável de uma validação e coleta de não conformidades."""
+"""Contexto de validação com estado limitado (streaming).
+
+O validador nunca materializa o arquivo inteiro: o contexto guarda apenas
+contadores, o último registro de cada tipo e os registros de controle
+(0000/x990/9001/9900/9990/9999). Isso mantém a memória constante mesmo para
+arquivos de vários GB.
+"""
 
 from __future__ import annotations
 
 from collections import Counter
-from collections.abc import Mapping
+from collections.abc import Iterable
 from dataclasses import dataclass, field
 from decimal import Decimal, InvalidOperation
 from typing import Final
@@ -12,6 +18,9 @@ from sped.core.types import Layout, Record
 from sped.validation.rules import RULES, Rule, Severity
 
 _MISSING: Final = object()
+
+#: Registros de controle necessários para as regras de estrutura.
+_CONTROL_CODES: Final[frozenset[str]] = frozenset({"0000", "9001", "9900", "9990", "9999"})
 
 
 @dataclass(frozen=True, slots=True)
@@ -57,42 +66,45 @@ def money(value: Decimal) -> str:
 
 @dataclass(slots=True)
 class ValidationContext:
-    """Records, layout and issue sink shared by all checks of one file."""
+    """Estado compartilhado pelas verificações de um único arquivo."""
 
     layout: Layout
-    records: list[Record]
     issues: list[ValidationIssue] = field(default_factory=list)
     counts: Counter[str] = field(default_factory=Counter)
     by_code: dict[str, list[Record]] = field(default_factory=dict)
-    positions: dict[int, int] = field(default_factory=dict)
+    last_by_code: dict[str, Record] = field(default_factory=dict)
+    first_code: str = ""
+    last_code: str = ""
 
     @classmethod
-    def build(cls, records: list[Record], layout: Layout) -> ValidationContext:
-        """Index ``records`` by register type and line number."""
-        counts: Counter[str] = Counter()
-        by_code: dict[str, list[Record]] = {}
-        positions: dict[int, int] = {}
-        for index, record in enumerate(records):
-            counts[record.code] += 1
-            by_code.setdefault(record.code, []).append(record)
-            positions[record.line_no] = index
-        return cls(layout, records, counts=counts, by_code=by_code, positions=positions)
+    def build(cls, records: Iterable[Record], layout: Layout) -> ValidationContext:
+        """Build a context from any iterable of records (including a reader)."""
+        ctx = cls(layout)
+        for record in records:
+            ctx.feed(record)
+        return ctx
+
+    def feed(self, record: Record) -> None:
+        """Absorb one record, keeping only bounded state."""
+        if not self.first_code:
+            self.first_code = record.code
+        self.last_code = record.code
+        self.counts[record.code] += 1
+        self.last_by_code[record.code] = record
+        if record.code in _CONTROL_CODES or record.code.endswith("990"):
+            self.by_code.setdefault(record.code, []).append(record)
 
     def get(self, code: str) -> tuple[Record, ...]:
-        """Return all records of register type ``code``."""
+        """Return the control records of register type ``code``."""
         return tuple(self.by_code.get(code, ()))
 
     def first(self, code: str) -> Record | None:
-        """Return the first record of register type ``code``, if any."""
+        """Return the first control record of ``code``, if any."""
         records = self.by_code.get(code)
         return records[0] if records else None
 
     def emit(self, rule: Rule, **values: object) -> None:
-        """Append an issue built from ``rule`` with interpolated ``values``.
-
-        ``line`` and ``code`` are reserved keys describing the location; all
-        other keys feed the pt-BR message template.
-        """
+        """Append an issue built from ``rule`` with interpolated ``values``."""
         line = int(str(values.pop("line", 0)))
         code = str(values.pop("code", ""))
         self.issues.append(
@@ -106,21 +118,8 @@ class ValidationContext:
         self.emit(RULES[rule_id], **values)
 
     def parent(self, record: Record, code: str) -> Record | None:
-        """Return the closest preceding record of type ``code``."""
-        position = self.positions.get(record.line_no, 0) - 1
-        while position >= 0:
-            candidate = self.records[position]
-            if candidate.code == code:
-                return candidate
-            position -= 1
+        """Return the closest preceding record of ``code`` in O(1)."""
+        candidate = self.last_by_code.get(code)
+        if candidate is not None and candidate.line_no < record.line_no:
+            return candidate
         return None
-
-
-def by_fields(records: Mapping[str, list[Record]], code: str, field_name: str) -> dict[str, int]:
-    """Map each declared value of ``code.field_name`` to its first line number."""
-    result: dict[str, int] = {}
-    for record in records.get(code, ()):
-        value = record.raw_get(field_name)
-        if value:
-            result.setdefault(value, record.line_no)
-    return result

@@ -91,7 +91,8 @@ def test_icms_totals_use_the_parent_of_their_own_block(tmp_path: Path) -> None:
     with read(path, layout=layout, strict=False) as reader:
         totals = compute_icms_totals(reader.iter_records())
     assert totals.debitos == Decimal(0)
-    assert totals.creditos == Decimal("100.00")
+    # C2: VL_ICMS "10000" em N(15,2) vale 10000,00 (sem escalamento).
+    assert totals.creditos == Decimal("10000")
 
 
 def test_validate_exit_code_only_for_errors(

@@ -107,6 +107,24 @@ _RULES: Final[tuple[Rule, ...]] = (
         GUIDA_ICMS,
     ),
     _rule(
+        "SPED-9990",
+        "Registro 9990",
+        "9990 {detail}",
+        GUIDA_ICMS,
+    ),
+    _rule(
+        "SPED-STRUCT-X990-001",
+        "Encerramento de bloco",
+        "{register} linha {line}: QTD_LIN informado {stated} diverge do apurado {computed}.",
+        GUIDA_ICMS,
+    ),
+    _rule(
+        "SPED-STRUCT-HIER-001",
+        "Hierarquia de registros",
+        "{register} linha {line}: nível {level} sem ancestral de nível {parent_level}.",
+        GUIDA_ICMS,
+    ),
+    _rule(
         "SPED-9999",
         "Registro 9999",
         "9999 {detail}",
@@ -150,6 +168,19 @@ _RULES: Final[tuple[Rule, ...]] = (
         "NCM oficial",
         "0200.COD_NCM {value} não consta na tabela oficial de NCM vigente.",
         TABELAS,
+    ),
+    _rule(
+        "SPED-TAB-CNPJ-001",
+        "CNPJ/CPF oficial",
+        "{register}.{field} {value} inválido: dígitos verificadores não conferem.",
+        "Receita Federal — algoritmo módulo 11 de CNPJ/CPF, "
+        "https://www.gov.br/receitafederal/pt-br/assuntos/meu-imposto-de-renda/tire-suas-duvidas",
+    ),
+    _rule(
+        "SPED-TAB-CFOP-002",
+        "CFOP x IND_OPER",
+        "{register}.CFOP {value} é de {kind}, mas IND_OPER informado é {operation}.",
+        GUIDA_ICMS,
     ),
     # --- referências cruzadas ------------------------------------------------
     _rule(

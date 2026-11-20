@@ -1,4 +1,9 @@
-"""Orquestração da validação PVA-like de um arquivo SPED."""
+"""Orquestração da validação PVA-like de um arquivo SPED.
+
+O arquivo é percorrido uma única vez. Cada verificador consome um registro por
+vez e guarda apenas estado limitado, portanto a memória não cresce com o
+tamanho do arquivo.
+"""
 
 from __future__ import annotations
 
@@ -8,9 +13,16 @@ from sped.core.encoding import iter_lines, split_line
 from sped.core.reader import SpedParseError, SpedReader
 from sped.core.types import Layout, Record
 from sped.layouts import detect_layout
-from sped.validation import checks, totals
+from sped.validation import checks
+from sped.validation.checks import (
+    CrossrefChecks,
+    HierarchyChecks,
+    StructureChecks,
+    TableChecks,
+)
 from sped.validation.context import ValidationContext, ValidationIssue
 from sped.validation.rules import Severity
+from sped.validation.totals import TotalsChecks
 
 IssueList = list[ValidationIssue]
 
@@ -71,7 +83,7 @@ def validate(path: str | Path) -> IssueList:
 
     Reading is non-strict so that all problems are reported in a single pass.
     The result is ordered by check group; each issue carries a stable rule id,
-    severity and pt-BR message.
+    severity and pt-BR message. Memory is bounded: no record list is built.
     """
     issues: IssueList = []
 
@@ -91,10 +103,26 @@ def validate(path: str | Path) -> IssueList:
         _structure_without_layout(_raw_codes(path), issues)
         return issues
 
-    records: list[Record] = []
+    ctx = ValidationContext(layout)
+    ctx.issues = issues
+    structure = StructureChecks()
+    tables = TableChecks()
+    hierarchy = HierarchyChecks()
+    crossrefs = CrossrefChecks(layout)
+    totals_checks = TotalsChecks(layout.obrigacao)
+
+    def consume(record: Record) -> None:
+        ctx.feed(record)
+        structure.feed(record, ctx)
+        tables.feed(record, ctx)
+        hierarchy.feed(record, ctx)
+        crossrefs.feed(record, ctx)
+        totals_checks.feed(record, ctx)
+
     try:
         reader = SpedReader(path, layout=layout, strict=False, on_issue=on_issue)
-        records = list(reader.iter_records())
+        for record in reader.iter_records():
+            consume(record)
     except SpedParseError as exc:
         issues.append(
             ValidationIssue(
@@ -106,8 +134,8 @@ def validate(path: str | Path) -> IssueList:
             )
         )
 
-    ctx = ValidationContext.build(records, layout)
-    ctx.issues = issues
-    checks.check_all(ctx)
-    totals.check_all(ctx)
+    structure.finish(ctx)
+    checks.check_perfil(ctx)
+    crossrefs.finish(ctx)
+    totals_checks.finish(ctx)
     return ctx.issues

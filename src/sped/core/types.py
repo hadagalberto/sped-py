@@ -62,18 +62,21 @@ class FieldDef:
                 return raw
         negative = raw.startswith("-")
         body = raw[1:] if negative else raw
-        if "," in body or "." in body:
-            normalized = body.replace(",", ".")
+        # SPED has no implied decimals: the decimal separator is a comma and
+        # ``10000`` means ten thousand, never ``100,00``. A dot is not a
+        # separator in the official format and is left raw so the reader flags
+        # it (Guia Prático EFD ICMS/IPI, campo 2.7.1).
+        if "," in body:
             try:
-                value = Decimal(normalized)
+                value = Decimal(body.replace(",", "."))
             except Exception:
                 return raw
             return -value if negative else value
-        if not body.isdigit():
+        if "." in body or not body.isdigit():
             return raw
-        value = Decimal(int(body)).scaleb(-self.dec)
         if self.dec == 0:
-            return int(value) * (-1 if negative else 1)
+            return int(body) * (-1 if negative else 1)
+        value = Decimal(int(body))
         return -value if negative else value
 
 
