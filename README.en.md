@@ -10,7 +10,13 @@ bookkeeping files (EFD ICMS/IPI, EFD-Contribuições, ECD and ECF).
 - Lazy record hierarchy with published levels and an optional on-disk index
   for random access by register.
 - `Decimal` for monetary values, `DDMMAAAA` dates converted to `date`.
-- CLI `sped` with `info`, `validate`, `export`, `diff` and `fix-totals`.
+- Full CLI `sped`: `info`, `validate`, `export`, `diff`, `fix-totals`,
+  `summarize`, `apuracao`, `recompute-apuracao`, `merge` and `split` — all with
+  `--json` and stable exit codes.
+- Analysis helpers: CFOP/CST/participant summaries, apuração recomputation
+  (ICMS/IPI, PIS/COFINS and accounting balances), amended-file diff and
+  merge/split by period.
+- Exports: CSV (dependency-free), pandas, Polars, Parquet and Excel.
 
 > Totals (`x990`, `9900`, `9999`) are recomputed by the writer. Never trust
 > totals from an incoming file without validating it.
@@ -19,7 +25,10 @@ bookkeeping files (EFD ICMS/IPI, EFD-Contribuições, ECD and ECF).
 
 ```bash
 pip install -e .
-pip install -e '.[pandas]'  # DataFrame/parquet export
+pip install -e '.[pandas]'  # DataFrame + Parquet (pyarrow)
+pip install -e '.[polars]'  # DataFrame + Parquet (Polars)
+pip install -e '.[excel]'   # Excel (openpyxl)
+pip install -e '.[test]'    # all extras, for the test suite
 ```
 
 ## Quick start
@@ -59,15 +68,77 @@ CFOP/CST/NCM tables and 0150/0200/0190 cross-references. Bundled tables are
 refreshed with `python scripts/update_tables.py`; provenance is recorded in
 each JSON file.
 
+## Analysis
+
+```python
+from sped import (
+    compute_apuracao,
+    diff_files,
+    merge_files,
+    recompute_apuracao,
+    split_file,
+    summarize_file,
+)
+from sped.core.reader import read
+from sped.layouts import detect_layout
+
+for summary in summarize_file("efd.txt"):  # CFOP, CST, COD_PART
+    print(summary.dimension, summary.as_dict())
+
+with read("efd.txt", strict=False) as source:
+    ap = compute_apuracao(source.iter_records(), layout=detect_layout("efd.txt"))
+print(ap.ok, [field.as_dict() for field in ap.divergences])
+fixed = recompute_apuracao("efd.txt")  # writes efd-apurado.txt
+
+result = diff_files("original.txt", "amended.txt")
+print(result.added, result.removed, result.changed)
+merge_files(["jan.txt", "feb.txt"], "accumulated.txt")
+parts = split_file("accumulated.txt", "parts/", by="month")
+```
+
+Apuração formulas are not reimplemented: analysis calls the same pure functions
+used by the validator (`sped.validation.totals`), which cite the official
+manuals. `merge_files`/`split_file` recompute structural totals and apuração, so
+their output passes `sped validate`.
+
+## Exports
+
+```python
+from sped import SpedExport, get_dataframe
+
+exporter = SpedExport("efd.txt")
+exporter.csv("out/")
+exporter.frames(library="pandas")
+exporter.frames(library="polars")
+exporter.parquet("out/")
+exporter.excel("out/sped.xlsx")
+c170 = get_dataframe("efd.txt", "C170")
+```
+
+CSV and Excel keep the published field names. Typed tabular formats append
+`_2`, `_3`… to duplicated mnemonics from the official layout (e.g. `ALIQ_PIS`
+in C170) so columns are unique; field positions never change.
+
 ## CLI
 
 ```bash
 sped info efd.txt
 sped validate efd.txt --json
 sped export efd.txt --to csv out/
-sped diff original.txt amended.txt
+sped export efd.txt --to parquet out/
+sped export efd.txt --to excel out/sped.xlsx
+sped diff original.txt amended.txt --json
 sped fix-totals efd.txt -o fixed.txt
+sped summarize efd.txt --dimension CFOP --json
+sped apuracao efd.txt --json
+sped recompute-apuracao efd.txt -o fixed.txt
+sped merge jan.txt feb.txt -o accumulated.txt
+sped split accumulated.txt -o parts/ --by month
 ```
+
+Every command accepts `--json`. Exit codes: `0` success; `1` command found
+non-conformities (validation, diff or apuração); `2` invalid usage or missing
+optional dependency; `3` read/I/O failure.
 
 ## Hierarchy and index
 
@@ -102,9 +173,11 @@ with `python scripts/generate_layouts.py` and
 ## Development
 
 ```bash
+python -m pip install -e '.[test]' pytest pytest-cov hypothesis ruff mypy
 ruff check . && ruff format --check .
 mypy
-python -m pytest
+python -m pytest -m "not slow"   # default suite
+python -m pytest -m slow         # opt-in 1 GB streaming test
 ```
 
 ## License

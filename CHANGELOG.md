@@ -3,6 +3,37 @@
 Todas as mudanças notáveis são documentadas aqui. Formato baseado em
 [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 
+## [0.4.0] - 2026-11-20
+
+### Added
+
+- Auxiliares de análise (`sped.analysis`): resumos por CFOP/CST/COD_PART em uma
+  única passada; recálculo e comparação da apuração de ICMS/IPI (E110 e C190),
+  PIS/COFINS (M200/M210/M600/M610) e saldos contábeis (I155, C155/E155/K155),
+  com `recompute_apuracao()` para gravar um arquivo corrigido; diff alinhado
+  entre original e retificadora; mesclagem e divisão por período
+  (`merge_files`, `split_file`) gerando arquivos que passam em `sped validate`.
+- Fórmulas de apuração extraídas para funções puras em `sped.validation.totals`,
+  compartilhadas pelo validador e pela análise (fonte única dos manuais oficiais).
+- Exportadores (`sped.exports`): CSV streaming, DataFrames pandas/Polars,
+  Parquet e Excel, com `SpedExport`, `get_dataframe()` e erro claro quando uma
+  extra opcional falta. Mnemônicos repetidos ganham sufixo `_2`/`_3` em formatos
+  tabulares, sem alterar posições de campo.
+- CLI completa com `summarize`, `apuracao`, `recompute-apuracao`, `merge`,
+  `split`, `--json` em todos os comandos e códigos de saída documentados
+  (`0` sucesso, `1` não conformidades, `2` uso/extra ausente, `3` E/S).
+- Extras `[test]` e atualização da CI para instalar todas as dependências
+  opcionais nos testes.
+- Testes de vazão com limite generoso e streaming de 1 GB com pico de memória
+  medido por `tracemalloc`.
+
+### Fixed
+
+- Escrita de campos de apuração corrigida (o REG implícito causava deslocamento
+  de uma posição nos valores recalculados).
+- Mesclagem/divisão preservam registros de controle obrigatórios (ex.: 9001 da
+  ECD) e blocos sem documentos, evitando inconsistências no resultado.
+
 ## [0.3.0] - 2026-11-20
 
 ### Added

@@ -12,7 +12,13 @@ arquivos de vários GB em memória constante.
 - Hierarquia de registros com níveis publicados nos manuais e iteração lazy;
   índice opcional em disco para acesso aleatório por registro.
 - `Decimal` para valores monetários, datas `DDMMAAAA` convertidas para `date`.
-- CLI `sped` com `info`, `validate`, `export`, `diff` e `fix-totals`.
+- CLI `sped` completa: `info`, `validate`, `export`, `diff`, `fix-totals`,
+  `summarize`, `apuracao`, `recompute-apuracao`, `merge` e `split`, todas com
+  `--json` e códigos de saída estáveis.
+- Auxiliares de análise: resumos por CFOP/CST/participante, recálculo de
+  apuração (ICMS/IPI, PIS/COFINS e saldos contábeis), diff de retificadora e
+  mesclagem/divisão por período.
+- Exportação para CSV (sem dependências), pandas, Polars, Parquet e Excel.
 
 > **Atenção:** os campos de totais (`x990`, `9900`, `9999`) são recalculados
 > pelo escritor. Nunca confie em totais de um arquivo recebido sem validar.
@@ -21,9 +27,10 @@ arquivos de vários GB em memória constante.
 
 ```bash
 pip install -e .            # biblioteca + CLI
-pip install -e '.[pandas]'  # exportação para DataFrame/parquet
-pip install -e '.[polars]'
-pip install -e '.[excel]'
+pip install -e '.[pandas]'  # DataFrame + Parquet (pyarrow)
+pip install -e '.[polars]'  # DataFrame + Parquet (Polars)
+pip install -e '.[excel]'   # Excel (openpyxl)
+pip install -e '.[test]'    # todas as extras, para rodar a suíte de testes
 ```
 
 ## Uso rápido
@@ -115,6 +122,64 @@ valid_cst_icms("000")  # True
 "84713011" in ncm_codes()  # True
 ```
 
+## Análise
+
+```python
+from sped import (
+    compute_apuracao,
+    diff_files,
+    merge_files,
+    recompute_apuracao,
+    split_file,
+    summarize_file,
+)
+from sped.core.reader import read
+from sped.layouts import detect_layout
+
+# Resumos em uma passada: CFOP, CST/CSOSN e COD_PART do C100 pai.
+for resumo in summarize_file("efd.txt"):
+    print(resumo.dimension, resumo.as_dict())
+
+# Recálculo da apuração: compara informado x apurado e grava um corrigido.
+with read("efd.txt", strict=False) as arquivo:
+    apuracao = compute_apuracao(arquivo.iter_records(), layout=detect_layout("efd.txt"))
+print(apuracao.ok, [c.as_dict() for c in apuracao.divergences])
+corrigido = recompute_apuracao("efd.txt")  # grava efd-apurado.txt
+
+# Diff alinhado (inserções/remoções não viram cascata de "alterados").
+resultado = diff_files("original.txt", "retificadora.txt")
+print(resultado.added, resultado.removed, resultado.changed)
+
+# Mesclar arquivos do mesmo leiaute e dividir por período.
+merge_files(["jan.txt", "fev.txt"], "acumulado.txt")
+for parte in split_file("acumulado.txt", "partes/", by="month"):
+    print(parte)
+```
+
+As fórmulas de apuração não são reimplementadas: são as mesmas funções puras
+usadas pelo validador (`sped.validation.totals`), que citam os manuais oficiais
+na seção "Leiautes e fonte oficial". `merge_files` e `split_file` geram arquivos
+com totais estruturais e apuração recalculados — o resultado passa em
+`sped validate`.
+
+## Exportação
+
+```python
+from sped import SpedExport, get_dataframe
+
+exportador = SpedExport("efd.txt")
+exportador.csv("saida/")  # <REG>.csv, sem dependências
+exportador.frames(library="pandas")  # dict[código] -> DataFrame
+exportador.frames(library="polars")
+exportador.parquet("saida/")  # <REG>.parquet
+exportador.excel("saida/sped.xlsx")
+c170 = get_dataframe("efd.txt", "C170")  # atalho de acesso
+```
+
+CSV e Excel mantêm os nomes de campos publicados. Em pandas/Polars/Parquet,
+mnemônicos repetidos no leiaute oficial (ex.: `ALIQ_PIS` no C170) recebem sufixo
+`_2`, `_3`… para que as colunas sejam únicas; as posições dos campos não mudam.
+
 ## CLI
 
 ```bash
@@ -122,9 +187,20 @@ sped info efd.txt
 sped validate efd.txt --json          # exit 1 quando há erros
 sped export efd.txt --to csv saida/
 sped export efd.txt --to parquet saida/
-sped diff original.txt retificadora.txt
+sped export efd.txt --to excel saida/sped.xlsx
+sped export efd.txt --to polars --json
+sped diff original.txt retificadora.txt --json
 sped fix-totals efd.txt -o corrigido.txt
+sped summarize efd.txt --dimension CFOP --json
+sped apuracao efd.txt --json
+sped recompute-apuracao efd.txt -o corrigido.txt
+sped merge jan.txt fev.txt -o acumulado.txt
+sped split acumulado.txt -o partes/ --by month
 ```
+
+Todos os comandos aceitam `--json`. Códigos de saída: `0` sucesso; `1` o
+comando encontrou não conformidades (validação, diff ou apuração); `2` uso
+inválido ou extra opcional ausente; `3` falha de leitura/E/S.
 
 ## Leiautes e fonte oficial
 
@@ -160,14 +236,16 @@ publicado daquela versão.
 ## Desenvolvimento
 
 ```bash
-python -m pip install -e . pytest pytest-cov hypothesis ruff mypy
+python -m pip install -e '.[test]' pytest pytest-cov hypothesis ruff mypy
 ruff check . && ruff format --check .
 mypy
-python -m pytest
+python -m pytest -m "not slow"   # suíte padrão
+python -m pytest -m slow         # streaming de 1 GB (opt-in)
 ```
 
 A suíte inclui testes de propriedade (`write(read(x))` byte-identical,
-idempotência dos totais) e um teste lento de streaming de 1 GB (`-m slow`).
+idempotência dos totais), vetores válidos/inválidos para cada regra e limites
+de memória plana (`tracemalloc`) e vazão no streaming de 1 GB.
 
 ## Licença
 
