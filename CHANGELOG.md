@@ -3,6 +3,24 @@
 Todas as mudanças notáveis são documentadas aqui. Formato baseado em
 [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 
+## [0.3.0] - 2026-11-20
+
+### Added
+
+- Motor de validação PVA-like (`sped.validation`) com catálogo de regras
+  imutáveis: cada regra tem id estável, severidade (`error`/`warning`), mensagem
+  em pt-BR e fonte oficial citada. Cobertura de estrutura, registros obrigatórios
+  por perfil A/B/C da EFD ICMS/IPI, totalizações de todas as obrigações
+  (C100/C170, C190, E110, M200/M210, M600/M610, I155 e C155/E155/K155),
+  tabelas oficiais e referências cruzadas 0150/0200/0190.
+- Tabelas oficiais agrupadas em `src/sped/tables`: CFOP (Ajuste SINIEF 07/01),
+  NCM (Receita Federal/Siscomex) e CST/CSOSN (Guia Prático EFD ICMS/IPI e
+  Ajuste SINIEF 03/10), com `scripts/update_tables.py` (`--offline`, `--check`)
+  registrando URL e data de cada fonte.
+- `ValidationIssue.severity` e `severity` na saída JSON de `sped validate`.
+- Fábrica sintética com variante quebrada por regra e testes positivo/negativo
+  para cada uma delas.
+
 ## [0.2.0] - 2026-11-20
 
 ### Added

@@ -74,7 +74,7 @@ def test_by_type_and_blocks(efd_file: Path) -> None:
         records = list(reader)
     tree = RecordTree(records, reader.layout)
     assert [record.code for record in tree.by_type("C100")] == ["C100"]
-    assert list(tree.blocks()) == ["0", "C", "E", "9"]
+    assert list(tree.blocks()) == ["0", "B", "C", "D", "E", "G", "H", "K", "1", "9"]
 
 
 def test_hierarchy_is_lazy_over_a_generator(efd_file: Path) -> None:

@@ -43,6 +43,22 @@ from sped.layouts import detect_layout
 print(detect_layout("efd.txt").obrigacao)
 ```
 
+## PVA-like validation
+
+```python
+from sped.validation import RULES, validate
+
+for issue in validate("efd.txt"):
+    print(issue.rule, issue.severity.value, issue.message)
+```
+
+Every rule has a stable id, severity (`error`/`warning`), a pt-BR message and a
+cited official source. Checks cover structure, required records per EFD
+ICMS/IPI profile (A/B/C), totalizations for all four obligations, official
+CFOP/CST/NCM tables and 0150/0200/0190 cross-references. Bundled tables are
+refreshed with `python scripts/update_tables.py`; provenance is recorded in
+each JSON file.
+
 ## CLI
 
 ```bash

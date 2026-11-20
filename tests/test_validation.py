@@ -36,7 +36,8 @@ def test_field_error_detected(broken_file_factory: Callable[[str], Path]) -> Non
 
 def test_issue_as_dict(broken_file_factory: Callable[[str], Path]) -> None:
     issue = validate(broken_file_factory("wrong_file_total"))[0]
-    assert set(issue.as_dict()) == {"rule", "line", "register", "message"}
+    assert set(issue.as_dict()) == {"rule", "line", "register", "message", "severity"}
+    assert issue.as_dict()["severity"] == "error"
 
 
 def test_out_of_order_file(tmp_path: Path) -> None:

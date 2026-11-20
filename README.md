@@ -77,6 +77,44 @@ for registro in leitor.by_type("C170"):  # só busca as linhas C170
     print(registro.get("VL_ITEM"))
 ```
 
+## Validação PVA-like
+
+```python
+from sped.validation import RULES, validate
+
+for issue in validate("efd.txt"):
+    print(issue.rule, issue.severity.value, issue.message)
+
+print(len(RULES))  # catálogo completo de regras
+```
+
+Cada regra possui id estável, severidade (`error` ou `warning`), mensagem em
+pt-BR e a fonte oficial citada. O motor verifica estrutura, registros
+obrigatórios por perfil (A/B/C da EFD ICMS/IPI), totalizações de todas as
+obrigações, tabelas oficiais e referências cruzadas (`0150`/`0200`/`0190`).
+A saída JSON do CLI inclui a severidade:
+
+```bash
+sped validate efd.txt --json    # exit 1 quando há erros
+```
+
+### Tabelas oficiais
+
+`src/sped/tables` agrupa CFOP (Ajuste SINIEF 07/01), NCM (Receita
+Federal/Siscomex) e CST/CSOSN (Guia Prático EFD ICMS/IPI e Ajuste SINIEF 03/10).
+Cada JSON registra `source_url` e `retrieved_at`; a atualização é feita por
+`python scripts/update_tables.py` (use `--offline` para o cache em
+`tmp/tables_cache` e `--check` para conferir se está atualizado).
+
+```python
+from sped.validation.tables import valid_cfop, valid_cst_icms, ncm_codes
+
+valid_cfop("1101")  # True (operacional)
+valid_cfop("1100")  # False (código de grupo)
+valid_cst_icms("000")  # True
+"84713011" in ncm_codes()  # True
+```
+
 ## CLI
 
 ```bash

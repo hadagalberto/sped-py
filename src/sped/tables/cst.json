@@ -1,0 +1,51 @@
+{
+  "metadata": {
+    "name": "cst",
+    "source_url": "https://www.gov.br/sped/pt-br/assuntos/escrituracoes-digitais/efd-icms-ipi/manuais-e-documentos-tecnicos/guia-pratico-efd-versao-3-2-4.pdf/@@display-file/file",
+    "retrieved_at": "2026-11-20",
+    "law": "Guia Prático EFD ICMS/IPI v3.2.4 Cap. IV subseção 1.1; Ajuste SINIEF 03/10",
+    "csosn_source_url": "https://www.confaz.fazenda.gov.br/legislacao/ajustes/2010/AJ_003_10"
+  },
+  "tables": {
+    "origem": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8"
+    ],
+    "tributacao": [
+      "00",
+      "02",
+      "10",
+      "15",
+      "20",
+      "30",
+      "40",
+      "41",
+      "50",
+      "51",
+      "53",
+      "60",
+      "61",
+      "70",
+      "90"
+    ],
+    "csosn": [
+      "101",
+      "102",
+      "103",
+      "201",
+      "202",
+      "203",
+      "300",
+      "400",
+      "500",
+      "900"
+    ]
+  }
+}
