@@ -1,0 +1,86 @@
+{
+  "obrigacao": "efd_icmsipi",
+  "versions": [
+    {
+      "cod_ver": "013",
+      "versao": "3.0.0",
+      "valid_from": "2019-01-01",
+      "valid_to": "2019-12-31",
+      "source_url": "http://sped.rfb.gov.br/arquivo/download/4222",
+      "source_date": "2019-01-17",
+      "file": "013.json"
+    },
+    {
+      "cod_ver": "014",
+      "versao": "3.0.3",
+      "valid_from": "2020-01-01",
+      "valid_to": "2020-12-31",
+      "source_url": "http://sped.rfb.gov.br/arquivo/download/5699",
+      "source_date": "2019-10-14",
+      "file": "014.json"
+    },
+    {
+      "cod_ver": "015",
+      "versao": "3.0.6",
+      "valid_from": "2021-01-01",
+      "valid_to": "2021-12-31",
+      "source_url": "https://www.confaz.fazenda.gov.br/legislacao/arquivo-manuais/NT_EFD%20ICMS%20IPI%202020.001%20v1.1%20-%20MOC",
+      "source_date": "2020-08-01",
+      "file": "015.json"
+    },
+    {
+      "cod_ver": "016",
+      "versao": "3.0.7",
+      "valid_from": "2022-01-01",
+      "valid_to": "2022-12-31",
+      "source_url": "http://sped.rfb.gov.br/arquivo/download/7234",
+      "source_date": "2021-08-26",
+      "file": "016.json"
+    },
+    {
+      "cod_ver": "017",
+      "versao": "3.1.1",
+      "valid_from": "2023-01-01",
+      "valid_to": "2023-12-31",
+      "source_url": "https://www.confaz.fazenda.gov.br/legislacao/arquivo-manuais/nt_efd-icms-ipi-2022-001-v1-0.pdf",
+      "source_date": "2022-05-01",
+      "file": "017.json"
+    },
+    {
+      "cod_ver": "018",
+      "versao": "3.1.4",
+      "valid_from": "2024-01-01",
+      "valid_to": "2024-12-31",
+      "source_url": "https://www.confaz.fazenda.gov.br/legislacao/arquivo-manuais/nota_tecnica_efd_icms_ipi_2023-001_v1-2.pdf",
+      "source_date": "2023-08-01",
+      "file": "018.json"
+    },
+    {
+      "cod_ver": "019",
+      "versao": "3.1.7",
+      "valid_from": "2025-01-01",
+      "valid_to": "2025-12-31",
+      "source_url": "http://sped.rfb.gov.br/arquivo/download/7545",
+      "source_date": "2024-09-25",
+      "file": "019.json"
+    },
+    {
+      "cod_ver": "020",
+      "versao": "3.2.1",
+      "valid_from": "2026-01-01",
+      "valid_to": "2026-12-31",
+      "source_url": "https://www.confaz.fazenda.gov.br/legislacao/arquivo-manuais/06___anexo_2.pdf",
+      "source_date": "2025-05-01",
+      "file": "020.json"
+    },
+    {
+      "cod_ver": "021",
+      "versao": "3.2.3",
+      "valid_from": "2027-01-01",
+      "valid_to": "2027-12-31",
+      "source_url": "https://www.confaz.fazenda.gov.br/legislacao/arquivo-manuais/a05___nt_2026-001_v1-0___anexo_iv.pdf",
+      "source_date": "2026-05-01",
+      "file": "021.json"
+    }
+  ]
+}

@@ -58,6 +58,7 @@ def _debug(reg_code: str, msg: str) -> None:
     if _DEBUG_REG and reg_code == _DEBUG_REG:
         print(f"[debug {reg_code}] {msg}")
 
+
 # ---------------------------------------------------------------------------
 # Expressões regulares dos elementos textuais do documento
 # ---------------------------------------------------------------------------
@@ -210,17 +211,11 @@ class _ColumnBands:
         return cols
 
 
-def _header_bands(
-    page: Page, header_line: dict[str, object], n_obrig: int
-) -> _ColumnBands | None:
+def _header_bands(page: Page, header_line: dict[str, object], n_obrig: int) -> _ColumnBands | None:
     """Calcula as bandas x de cada coluna a partir das palavras do cabeçalho."""
     top = float(header_line["top"])  # type: ignore[arg-type]
     bottom = float(header_line["bottom"])  # type: ignore[arg-type]
-    words = [
-        w
-        for w in page.extract_words()
-        if w["top"] >= top - 1 and w["bottom"] <= bottom + 1
-    ]
+    words = [w for w in page.extract_words() if w["top"] >= top - 1 and w["bottom"] <= bottom + 1]
     words.sort(key=lambda w: w["x0"])
     labels = [w["text"] for w in words]
     if labels[:6] != list(_HEADER_LABELS):
@@ -351,9 +346,7 @@ def _cell_words(
     """Palavras de uma célula, ordenadas por linha e coluna."""
     words = _words_in_region(page, band[0], band[1], row.top, row.bottom)
     words = [
-        w
-        for w in words
-        if not any(j0 <= (w["top"] + w["bottom"]) / 2 <= j1 for j0, j1 in junk)
+        w for w in words if not any(j0 <= (w["top"] + w["bottom"]) / 2 <= j1 for j0, j1 in junk)
     ]
     words.sort(key=lambda w: (round(w["top"], 1), w["x0"]))
     return words
@@ -366,7 +359,7 @@ def _strip_assignments(
     top: float,
     bottom: float,
     junk: Sequence[tuple[float, float]],
-    is_value: "Callable[[str], bool]",
+    is_value: Callable[[str], bool],
 ) -> dict[int, str]:
     """Células por faixas verticais (arestas horizontais) de uma coluna.
 
@@ -407,9 +400,7 @@ def _strip_assignments(
             continue
         words = _words_in_region(page, band[0], band[1], y0, y1)
         words = [
-            w
-            for w in words
-            if not any(j0 <= (w["top"] + w["bottom"]) / 2 <= j1 for j0, j1 in junk)
+            w for w in words if not any(j0 <= (w["top"] + w["bottom"]) / 2 <= j1 for j0, j1 in junk)
         ]
         words.sort(key=lambda w: (round(w["top"], 1), w["x0"]))
         text = re.sub(r"\s+", " ", " ".join(w["text"] for w in words)).strip()
@@ -492,15 +483,20 @@ def _page_events(lines: Sequence[dict[str, object]]) -> list[_StreamEvent]:
         if m:
             events.append(
                 _StreamEvent(
-                    top=float(line["top"]), kind="reg", line=dict(line),
-                    code=m.group(1), title=m.group(2),
+                    top=float(line["top"]),
+                    kind="reg",
+                    line=dict(line),
+                    code=m.group(1),
+                    title=m.group(2),
                 )
             )
             continue
         if TABLE_HEADER_LINE_RE.match(text):
             events.append(
                 _StreamEvent(
-                    top=float(line["top"]), kind="header", line=dict(line),
+                    top=float(line["top"]),
+                    kind="header",
+                    line=dict(line),
                     n_obrig=_n_obrig_from_header(text),
                 )
             )
@@ -509,7 +505,9 @@ def _page_events(lines: Sequence[dict[str, object]]) -> list[_StreamEvent]:
         if m:
             events.append(
                 _StreamEvent(
-                    top=float(line["top"]), kind="nivel", line=dict(line),
+                    top=float(line["top"]),
+                    kind="nivel",
+                    line=dict(line),
                     level=int(m.group(1)),
                 )
             )
@@ -518,22 +516,25 @@ def _page_events(lines: Sequence[dict[str, object]]) -> list[_StreamEvent]:
         if m:
             events.append(
                 _StreamEvent(
-                    top=float(line["top"]), kind="ocorr", line=dict(line),
+                    top=float(line["top"]),
+                    kind="ocorr",
+                    line=dict(line),
                     occurrence=m.group(1).rstrip("."),
                 )
             )
             continue
         if OBS_LINE_RE.match(text):
-            events.append(
-                _StreamEvent(top=float(line["top"]), kind="obs", line=dict(line))
-            )
+            events.append(_StreamEvent(top=float(line["top"]), kind="obs", line=dict(line)))
             continue
         m = VALORES_VALIDOS_RE.search(raw)
         if m:
             events.append(
                 _StreamEvent(
-                    top=float(line["top"]), kind="valores", line=dict(line),
-                    field_num=int(m.group(1)), field_name=m.group(2),
+                    top=float(line["top"]),
+                    kind="valores",
+                    line=dict(line),
+                    field_num=int(m.group(1)),
+                    field_name=m.group(2),
                     raw_values=m.group(3),
                 )
             )
@@ -560,9 +561,7 @@ def _process_page(page: Page, page_no: int, state: _ParserState) -> None:
     ):
         first_top = events[0].top if events else page_bottom
         if first_top > page_top:
-            _collect_rows(
-                page, page_no, state, state.current, page_top, first_top, junk
-            )
+            _collect_rows(page, page_no, state, state.current, page_top, first_top, junk)
 
     for idx, ev in enumerate(events):
         if ev.kind == "reg":
@@ -571,9 +570,7 @@ def _process_page(page: Page, page_no: int, state: _ParserState) -> None:
                 state.duplicates.append(ev.code)
                 state.current = prev
             elif prev is None:
-                state.current = ParsedRegister(
-                    code=ev.code, title=ev.title, page_first=page_no
-                )
+                state.current = ParsedRegister(code=ev.code, title=ev.title, page_first=page_no)
                 state.registers[ev.code] = state.current
             else:
                 state.current = prev
@@ -588,9 +585,7 @@ def _process_page(page: Page, page_no: int, state: _ParserState) -> None:
                 continue
             bands = _header_bands(page, ev.line, ev.n_obrig)
             if bands is None:
-                state.diagnostics.append(
-                    f"p{page_no}: {reg.code} cabeçalho de tabela ilegível"
-                )
+                state.diagnostics.append(f"p{page_no}: {reg.code} cabeçalho de tabela ilegível")
                 continue
             state.bands = bands
             next_top = events[idx + 1].top if idx + 1 < len(events) else page_bottom
@@ -611,8 +606,7 @@ def _process_page(page: Page, page_no: int, state: _ParserState) -> None:
             tokens = [
                 t.strip()
                 for t in re.split(r"[;,\n]", ev.raw_values)
-                if t.strip() and len(t.strip()) <= 6
-                and re.fullmatch(r"[0-9A-Za-z-]+", t.strip())
+                if t.strip() and len(t.strip()) <= 6 and re.fullmatch(r"[0-9A-Za-z-]+", t.strip())
             ]
             if not tokens:
                 continue
@@ -693,9 +687,7 @@ def _group_units(tokens: Sequence[str]) -> list[str]:
     return [u for u in units if u]
 
 
-def _parse_value_run(
-    words: Sequence[dict[str, float]], n_obrig: int
-) -> _TailValues | None:
+def _parse_value_run(words: Sequence[dict[str, float]], n_obrig: int) -> _TailValues | None:
     """Extrai Tipo/Tam/Dec/unidades de obrigatoriedade do fim da primeira linha.
 
     A descrição nos PDFs oficiais ultrapassa a largura da célula desenhada e
@@ -754,9 +746,7 @@ def _at_or_below_rows(
     """
     out: dict[int, list[dict[str, float]]] = {}
     clean = [
-        w
-        for w in words
-        if not any(j0 <= (w["top"] + w["bottom"]) / 2 <= j1 for j0, j1 in junk)
+        w for w in words if not any(j0 <= (w["top"] + w["bottom"]) / 2 <= j1 for j0, j1 in junk)
     ]
     for w in clean:
         center = (w["top"] + w["bottom"]) / 2
@@ -853,8 +843,7 @@ def _collect_rows(
             reg.code,
             f"obrig '{col_name}' palavras por linha: "
             + ", ".join(
-                f"{num}:{_join_words(ws)!r}"
-                for num, ws in sorted(oblig_words[col_name].items())
+                f"{num}:{_join_words(ws)!r}" for num, ws in sorted(oblig_words[col_name].items())
             ),
         )
     for col_name in strips:
@@ -1050,9 +1039,7 @@ def validate_parse(parse: LayoutParse, expected_min_registers: int = 100) -> lis
                 problems.append(f"{code}.{fld.num} ({fld.name}): dec inválido {fld.dec!r}")
             for v in fld.obrig:
                 if not OBRIG_CELL_RE.match(v):
-                    problems.append(
-                        f"{code}.{fld.num} ({fld.name}): obrig inválido {v!r}"
-                    )
+                    problems.append(f"{code}.{fld.num} ({fld.name}): obrig inválido {v!r}")
         if reg.level is None:
             problems.append(f"{code}: sem nível hierárquico")
         if reg.occurrence is None:
