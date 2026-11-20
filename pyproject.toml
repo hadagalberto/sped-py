@@ -1,0 +1,105 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "sped-py"
+version = "0.1.0"
+description = "Leitura, validação, escrita e análise de arquivos SPED (EFD ICMS/IPI, EFD-Contribuições, ECD e ECF) em Python puro, com leitura streaming."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [{ name = "Hadagalberto Junior" }]
+keywords = ["sped", "efd", "icms", "ipi", "contribuicoes", "ecd", "ecf", "fiscal", "receita"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Financial and Insurance Industry",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: Portuguese (Brazilian)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Office/Business :: Financial :: Accounting",
+    "Typing :: Typed",
+]
+dependencies = []
+
+[project.optional-dependencies]
+pandas = ["pandas>=2.0"]
+polars = ["polars>=1.0"]
+excel = ["openpyxl>=3.1"]
+
+[project.scripts]
+sped = "sped.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/hadagalberto/sped-py"
+Documentation = "https://github.com/hadagalberto/sped-py#readme"
+Repository = "https://github.com/hadagalberto/sped-py"
+Changelog = "https://github.com/hadagalberto/sped-py/blob/main/CHANGELOG.md"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/sped"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/sped", "tests", "scripts", "README.md", "README.en.md", "CHANGELOG.md", "CONTRIBUTING.md", "LICENSE", "pyproject.toml"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+src = ["src", "tests", "scripts"]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "N",   # pep8-naming
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "SIM", # flake8-simplify
+    "RUF", # ruff-specific
+    "PL",  # pylint subset
+]
+ignore = [
+    "PLR0913",  # many arguments: SPED layouts genuinely have many fields
+    "PLR2004",  # magic values in tests are intentional vectors
+]
+exclude = ["tmp", ".sped-cache"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["PLR0915"] # long, exhaustive test functions are the point
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.mypy]
+strict = true
+python_version = "3.10"
+mypy_path = "src"
+files = ["src/sped", "tests", "scripts"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers --cov=sped --cov-report=term-missing --cov-fail-under=95"
+markers = [
+    "slow: marca testes mais lentos (grandes volumes) — usar -m 'not slow' para pulá-los",
+]
+
+[tool.coverage.run]
+source = ["src/sped"]
+omit = ["src/sped/py.typed"]
+
+[tool.coverage.report]
+precision = 2
+show_missing = true
+exclude_also = [
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+]
