@@ -99,18 +99,20 @@ def compute_icms_totals(records: Iterable[Record]) -> IcmsTotals:
     """
     debitos = ZERO
     creditos = ZERO
-    last_c100: Record | None = None
-    last_d100: Record | None = None
+    # One parent per block: a D190 must inherit D100's COD_SIT/IND_OPER, never
+    # a stale C100 from the previous block. Using ``last_c100 or last_d100``
+    # short-circuits to C forever once any C100 has been seen.
+    parents: dict[str, Record | None] = {"C": None, "D": None}
     for record in records:
         if record.code == "C100":
-            last_c100 = record
+            parents["C"] = record
             continue
         if record.code == "D100":
-            last_d100 = record
+            parents["D"] = record
             continue
         if record.code not in _ICMS_SOURCE_CODES:
             continue
-        parent = last_c100 or last_d100
+        parent = parents.get(record.code[0])
         if parent is not None and parent.raw_get("COD_SIT") in EXCLUDED_COD_SIT:
             continue
         operation = parent.raw_get("IND_OPER") if parent is not None else ""

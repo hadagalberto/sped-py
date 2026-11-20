@@ -22,7 +22,14 @@ from sped.core.hierarchy import RecordTree
 from sped.core.index import IndexedReader
 from sped.core.reader import read
 from sped.core.writer import write
-from sped.exports import SpedExport, export_csv, to_dataframes, to_excel, to_parquet
+from sped.exports import (
+    SpedExport,
+    export_csv,
+    get_dataframe,
+    to_dataframes,
+    to_excel,
+    to_parquet,
+)
 from sped.layouts import (
     OBRIGACOES,
     available_versions,
@@ -47,6 +54,7 @@ __all__ = [
     "detect_obrigacao",
     "diff_files",
     "export_csv",
+    "get_dataframe",
     "load_layout",
     "merge_files",
     "read",

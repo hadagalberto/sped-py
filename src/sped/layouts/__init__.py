@@ -73,8 +73,12 @@ def _parse_field(raw: dict[str, Any]) -> FieldDef:
     obrig = str(raw.get("obrig", ""))
     valid = raw.get("valid_values", ())
     # EFD ICMS/IPI uses O/OC/O*; ECD, ECF and EFD-Contribuições use
-    # "Sim"/"Não" in the official "Obrigatório" column.
-    required = bool(re.match(r"^O(?:\*|$)", obrig)) or ("Sim" in obrig and "Não" not in obrig)
+    # "Sim"/"Não" in the official "Obrigatório" column. Some extracted tables
+    # repeat the token ("O O", "OC OC"), so normalise before matching —
+    # otherwise officially required fields silently become optional.
+    tokens = obrig.split()
+    first = tokens[0] if tokens else ""
+    required = bool(re.match(r"^O(?:\*|$)", first)) or ("Sim" in obrig and "Não" not in obrig)
     return FieldDef(
         num=int(raw["num"]),
         name=str(raw["name"]),
@@ -84,7 +88,7 @@ def _parse_field(raw: dict[str, Any]) -> FieldDef:
         dec=dec,
         description=str(raw.get("description", "")),
         required=required,
-        conditional=obrig.startswith("OC") or "condicion" in obrig.lower(),
+        conditional=first.startswith("OC") or "condicion" in obrig.lower(),
         valid_values=tuple(str(value) for value in valid),
     )
 

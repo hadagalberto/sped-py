@@ -7,19 +7,22 @@ Obrigado por contribuir! Para manter a qualidade:
 2. **Nunca** invente posições de campos ou regras. Toda alteração de leiaute
    deve vir de uma fonte oficial citada em `scripts/generate_layouts.py`.
    Fórmulas de apuração vivem em `sped.validation.totals` com a fonte citada;
-   a análise reutiliza essas funções puras — não as copie.
+   a análise reutiliza essas funções puras — não as copie. Para regenerar os
+   leiautes instale `pip install -e '.[tools]'` (o `pdfplumber` é necessário
+   apenas para os scripts geradores).
 3. Todo bugfix precisa de um teste que falhe antes da correção. Testes devem
    usar vetores sintéticos válidos e inválidos conhecidos; nunca remova ou
    enfraqueça um teste para fazê-lo passar, e nunca use testes pulados.
 4. Antes de abrir o PR, rode:
 
    ```bash
-   python -m pip install -e '.[test]' pytest pytest-cov hypothesis ruff mypy
-   ruff check .
-   ruff format --check .
-   mypy
+   python -m pip install -e '.[test]' pytest pytest-cov hypothesis ruff mypy build
+   python -m ruff check .
+   python -m ruff format --check .
+   python -m mypy
+   python -m build
    python -m pytest -m "not slow"
-   python -m pytest -m slow   # streaming de 1 GB, antes de publicar uma release
+   python -m pytest -m slow --no-cov   # streaming de 1 GB (sem gate de cobertura)
    ```
 
 5. Cobertura mínima: 95%. Novos módulos de análise/exportação precisam de

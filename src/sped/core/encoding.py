@@ -30,8 +30,13 @@ def detect_encoding(sample: bytes) -> str:
     """
     if sample.startswith(b"\xef\xbb\xbf"):
         return "utf-8-sig"
+    # An incremental decoder buffers an incomplete trailing multi-byte sequence
+    # instead of rejecting it. A plain ``sample.decode("utf-8")`` misdetects a
+    # UTF-8 file as latin-1 whenever the 8192-byte sample happens to cut a
+    # character in half (see tests/test_hardening.py).
+    decoder = codecs.getincrementaldecoder("utf-8")()
     try:
-        sample.decode("utf-8")
+        decoder.decode(sample)
     except UnicodeDecodeError:
         return "latin-1"
     return "utf-8"
@@ -40,6 +45,11 @@ def detect_encoding(sample: bytes) -> str:
 def is_signature_line(line: str) -> bool:
     """True if ``line`` belongs to the appended signature block."""
     stripped = line.strip().lstrip("\ufeff").upper()
+    # Some signers frame the marker as ``|SBMDSIG|...|`` instead of writing it
+    # bare. Both forms belong to the appended signature block and must be
+    # stripped (a 7-character token is never a valid SPED register code).
+    if stripped.startswith("|"):
+        stripped = stripped[1:]
     return any(stripped.startswith(marker) for marker in SIGNATURE_MARKERS)
 
 
@@ -60,14 +70,14 @@ def iter_lines(path: str | Path, encoding: str | None = None) -> Iterator[str]:
             buffer += decoder.decode(chunk)
             while "\n" in buffer:
                 raw, buffer = buffer.split("\n", 1)
-                line = raw.rstrip("\r")
+                line = raw[:-1] if raw.endswith("\r") else raw
                 if in_signature or is_signature_line(line):
                     in_signature = True
                     continue
                 yield line
         buffer += decoder.decode(b"", final=True)
         if buffer and not in_signature and not is_signature_line(buffer):
-            yield buffer.rstrip("\r")
+            yield buffer[:-1] if buffer.endswith("\r") else buffer
 
 
 def split_line(line: str) -> tuple[str, tuple[str, ...]] | None:

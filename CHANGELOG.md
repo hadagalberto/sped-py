@@ -3,6 +3,34 @@
 Todas as mudanças notáveis são documentadas aqui. Formato baseado em
 [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 
+## [Unreleased] — auditoria e endurecimento (milestone 5)
+
+### Fixed
+
+- Detecção de UTF-8 quando um caractere multibyte cruza o limite da amostra de
+  8192 bytes; blocos de assinatura com o marcador enquadrado (`|SBMDSIG|…|`)
+  agora são removidos; CR final não é mais removido em excesso.
+- Apuração de ICMS: `C190` e `D190` usam o pai do seu próprio bloco — um `D100`
+  cancelado não herda mais o `C100` anterior.
+- `obrig` repetido nas tabelas oficiais (`"O O"`, `"OC OC"`) não desativa mais
+  a obrigatoriedade do campo.
+- Referências cruzadas 0150/0200/0190 derivadas de todos os registros do
+  leiaute, não apenas de uma lista fixa de três registros.
+- CLI: avisos não causam mais exit 1; erros de uso retornam 2 (não 3);
+  `fix-totals` detecta a codificação de entrada por padrão e a aplica na saída;
+  `diff` tolera linhas com framing quebrado.
+- `get_dataframe` exportado no pacote raiz; erro acionável quando o pyarrow
+  falta na exportação Parquet; índice em disco falha se o arquivo de origem
+  estiver ausente.
+- CI: job lento usa `--no-cov` (o gate de 95% tornava o job impossível) e novo
+  job de build com wheel + sdist.
+
+### Added
+
+- `docs/SPEC-CHECKLIST.md` com verificação de cada requisito da SPEC.
+- Extra `[tools]` com `pdfplumber` para os scripts geradores de leiautes.
+- `tests/test_hardening.py` com 15 regressões de entradas maliciosas/edge cases.
+
 ## [0.4.0] - 2026-11-20
 
 ### Added

@@ -198,9 +198,10 @@ sped merge jan.txt fev.txt -o acumulado.txt
 sped split acumulado.txt -o partes/ --by month
 ```
 
-Todos os comandos aceitam `--json`. Códigos de saída: `0` sucesso; `1` o
-comando encontrou não conformidades (validação, diff ou apuração); `2` uso
-inválido ou extra opcional ausente; `3` falha de leitura/E/S.
+Todos os comandos aceitam `--json`. Códigos de saída: `0` sucesso (avisos de
+validação não falham o comando); `1` o comando encontrou erros (validação,
+diff ou apuração); `2` uso inválido ou extra opcional ausente; `3` falha de
+leitura/E/S.
 
 ## Leiautes e fonte oficial
 
@@ -221,7 +222,8 @@ Cada JSON registra `source_url`, `source_date` e vigência. Fontes utilizadas
 - ECF — [Manuais dos Leiautes 6 a 12 (item 1644)](http://sped.rfb.gov.br/item/show/1644);
   `0000.COD_VER` = 0006 a 0012.
 
-Scripts geradores (com `--offline` para usar o cache em `tmp/pdf`):
+Scripts geradores (com `--offline` para usar o cache em `tmp/pdf`; exigem
+`pip install -e '.[tools]'` pelo `pdfplumber`):
 
 ```bash
 python scripts/generate_layouts.py
@@ -229,19 +231,31 @@ python scripts/generate_layouts_accounting.py
 ```
 
 Nenhuma posição de campo é inventada: as tabelas estruturadas dos manuais
-oficiais são extraídas diretamente pelos scripts. Pesquisas posteriores que
-alteram campos sem criar novo COD_VER são refletidas no último guia/manual
+oficiais são extraídas diretamente pelos scripts. Quando a extração de uma
+versão antiga perde linhas, o gerador preenche a lacuna apenas com o campo de
+mesmo número publicado no Guia Prático v3.2.4 e registra a quantidade em
+`metadata.gap_filled_fields` de cada JSON (visível em `layout.gap_filled_fields`).
+Esses campos são explicitamente sinalizados como provenientes da tabela completa
+mais recente, não como extração específica daquela versão. Pesquisas posteriores
+que alteram campos sem criar novo COD_VER são refletidas no último guia/manual
 publicado daquela versão.
 
 ## Desenvolvimento
 
 ```bash
-python -m pip install -e '.[test]' pytest pytest-cov hypothesis ruff mypy
-ruff check . && ruff format --check .
-mypy
-python -m pytest -m "not slow"   # suíte padrão
-python -m pytest -m slow         # streaming de 1 GB (opt-in)
+python -m pip install -e '.[test]' pytest pytest-cov hypothesis ruff mypy build
+python -m ruff check . && python -m ruff format --check .
+python -m mypy
+python -m build                  # wheel + sdist (hatchling)
+python -m pytest -m "not slow"   # suíte padrão, com cobertura ≥ 95%
+python -m pytest -m slow --no-cov # streaming de 1 GB (opt-in, sem gate de cobertura)
 ```
+
+A garantia de memória constante vale para `read()`/`write()`/`IndexedReader`
+(leitura e escrita streaming). Operações offline que precisam ver registros de
+vários blocos ao mesmo tempo — `validate`, `diff`, `merge`, `split` e os
+auxiliares de apuração — materializam os registros em memória; use
+`sped split` por período antes de processar arquivos de vários GB com elas.
 
 A suíte inclui testes de propriedade (`write(read(x))` byte-identical,
 idempotência dos totais), vetores válidos/inválidos para cada regra e limites

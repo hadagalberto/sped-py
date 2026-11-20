@@ -136,9 +136,9 @@ sped merge jan.txt feb.txt -o accumulated.txt
 sped split accumulated.txt -o parts/ --by month
 ```
 
-Every command accepts `--json`. Exit codes: `0` success; `1` command found
-non-conformities (validation, diff or apuração); `2` invalid usage or missing
-optional dependency; `3` read/I/O failure.
+Every command accepts `--json`. Exit codes: `0` success (validation warnings do
+not fail the command); `1` command found errors (validation, diff or apuração);
+`2` invalid usage or missing optional dependency; `3` read/I/O failure.
 
 ## Hierarchy and index
 
@@ -158,13 +158,21 @@ for record in IndexedReader("arquivo.txt").by_type("C170"):
 
 ## Layouts
 
+Regeneration needs `pip install -e '.[tools]'` (`pdfplumber`). When an old
+version's extraction loses table rows, the generator fills each gap only with
+the same-numbered field from the official v3.2.4 complete table and records the
+count in `metadata.gap_filled_fields` / `layout.gap_filled_fields`; no field
+position is invented, but those fields are explicitly flagged as coming from
+the latest published complete table rather than that version's own manual.
+
 Versioned JSON layouts live in `src/sped/layouts/<obrigacao>/` and record the
 official source URL, publication date and validity period. The official
 sources are the Portal SPED manuals: EFD ICMS/IPI
 ([item 1573](http://sped.rfb.gov.br/item/show/1573)), EFD-Contribuições guides
 v1.32/v1.35 ([items 4175](http://sped.rfb.gov.br/item/show/4175) and
 [5837](http://sped.rfb.gov.br/item/show/5837)), ECD manuals
-([items 4217/7989](http://sped.rfb.gov.br/item/show/1569)) and ECF manuals
+([items 4217](http://sped.rfb.gov.br/item/show/4217) and
+[7989](http://sped.rfb.gov.br/item/show/7989)) and ECF manuals
 [leiautes 6–12 (item 1644)](http://sped.rfb.gov.br/item/show/1644). Regenerate
 with `python scripts/generate_layouts.py` and
 `python scripts/generate_layouts_accounting.py` (network required, or
@@ -173,12 +181,18 @@ with `python scripts/generate_layouts.py` and
 ## Development
 
 ```bash
-python -m pip install -e '.[test]' pytest pytest-cov hypothesis ruff mypy
-ruff check . && ruff format --check .
-mypy
-python -m pytest -m "not slow"   # default suite
-python -m pytest -m slow         # opt-in 1 GB streaming test
+python -m pip install -e '.[test]' pytest pytest-cov hypothesis ruff mypy build
+python -m ruff check . && python -m ruff format --check .
+python -m mypy
+python -m build                  # wheel + sdist (hatchling)
+python -m pytest -m "not slow"   # default suite, coverage >= 95%
+python -m pytest -m slow --no-cov # opt-in 1 GB streaming test (no coverage gate)
 ```
+
+Constant memory applies to `read()`/`write()`/`IndexedReader`. Offline
+operations that need records from several blocks at once — `validate`, `diff`,
+`merge`, `split` and the apuração helpers — materialize records in memory; use
+`sped split` by period before running them on multi-GB files.
 
 ## License
 

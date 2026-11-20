@@ -98,10 +98,17 @@ def to_parquet(
     written: dict[str, Path] = {}
     for code, frame in frames.items():
         path = target / f"{code}.parquet"
-        if library == "polars" or not hasattr(frame, "to_parquet"):
-            frame.write_parquet(path)
-        else:
-            frame.to_parquet(path, index=False)
+        engine = "polars" if library == "polars" or not hasattr(frame, "to_parquet") else "pandas"
+        try:
+            if engine == "polars":
+                frame.write_parquet(path)
+            else:
+                frame.to_parquet(path, index=False)
+        except ImportError as exc:
+            # pandas exposes ``to_parquet`` even when its optional pyarrow
+            # engine is absent; surface the actionable extra instead of a
+            # bare ImportError escaping the CLI.
+            raise MissingOptionalDependencyError(engine, "pyarrow") from exc
         written[code] = path
     return written
 

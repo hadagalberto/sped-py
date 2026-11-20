@@ -5,6 +5,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from typing import Final
 
+from sped.core.types import Layout
 from sped.validation.context import ValidationContext, by_fields
 from sped.validation.tables import ncm_codes, valid_cfop, valid_cst_icms
 
@@ -180,20 +181,45 @@ _REFERENCES: Final[tuple[tuple[str, str, str, str], ...]] = (
     ("UNID", "0190", "SPED-XREF-0190-001", "UNID"),
 )
 
-#: Registros que consomem cada tipo de cadastro.
-_USERS: Final[dict[str, tuple[str, ...]]] = {
-    "COD_PART": ("C100", "D100"),
-    "COD_ITEM": ("C170",),
-    "UNID": ("C170", "0200"),
+#: Campos de cadastro cujos valores devem existir em 0150/0200/0190.
+_DECLARED: Final[dict[str, str]] = {
+    "COD_PART": "0150",
+    "COD_ITEM": "0200",
+    "UNID": "0190",
 }
+
+
+def _users(layout: Layout) -> dict[str, dict[str, str]]:
+    """Derive every referencing register from the official layout fields.
+
+    Hardcoding a short list would miss dozens of registers that also carry
+    ``COD_PART``/``COD_ITEM``/``UNID`` (e.g. C110, D160, 0205). The layout is
+    the source of truth; no register is guessed.
+    """
+    result: dict[str, dict[str, str]] = {name: {} for name in _DECLARED}
+    for code, register in layout.registers.items():
+        names = register.field_names
+        # A cadastro's own key is not a reference to itself, but 0200.UNID_INV
+        # still references the unit declared in 0190.
+        if code != "0150" and "COD_PART" in names:
+            result["COD_PART"][code] = "COD_PART"
+        if code != "0200" and "COD_ITEM" in names:
+            result["COD_ITEM"][code] = "COD_ITEM"
+        if code != "0190":
+            if "UNID_INV" in names:
+                result["UNID"][code] = "UNID_INV"
+            elif "UNID" in names:
+                result["UNID"][code] = "UNID"
+    return result
 
 
 def check_crossrefs(ctx: ValidationContext) -> None:
     """0150/0200/0190 references used by documents and items."""
-    for field_name, declared_code, rule_id, label in _REFERENCES:
-        field = "UNID" if declared_code == "0190" else field_name
-        declared = by_fields(ctx.by_code, declared_code, field)
-        _check_declared_field(ctx, field_name, declared, declared_code, rule_id, label)
+    users = _users(ctx.layout)
+    for field_name, declared_code, rule_id, _label in _REFERENCES:
+        declared_field = "UNID" if declared_code == "0190" else field_name
+        declared = by_fields(ctx.by_code, declared_code, declared_field)
+        _check_declared_field(ctx, users[field_name], declared, declared_code, rule_id)
 
     for code, field_name in (("0150", "COD_PART"), ("0200", "COD_ITEM"), ("0190", "UNID")):
         seen: set[str] = set()
@@ -213,23 +239,18 @@ def check_crossrefs(ctx: ValidationContext) -> None:
             seen.add(value)
 
 
-def _check_declared_field(  # noqa: PLR0917
+def _check_declared_field(
     ctx: ValidationContext,
-    field_name: str,
+    users: dict[str, str],
     declared: dict[str, int],
     declared_code: str,
     rule_id: str,
-    label: str,
 ) -> None:
-    for code in _USERS[field_name]:
+    for code, field_name in users.items():
         for record in ctx.get(code):
             value = record.raw_get(field_name)
             if not value:
                 continue
-            if field_name == "UNID" and code == "0200":
-                value = record.raw_get("UNID_INV")
-                if not value:
-                    continue
             if value in declared:
                 if declared[value] > record.line_no:
                     ctx.emit_id(
@@ -237,7 +258,7 @@ def _check_declared_field(  # noqa: PLR0917
                         line=record.line_no,
                         code=code,
                         register=code,
-                        field="UNID_INV" if code == "0200" and field_name == "UNID" else label,
+                        field=field_name,
                         value=value,
                         declared=declared[value],
                     )
@@ -248,7 +269,7 @@ def _check_declared_field(  # noqa: PLR0917
                 code=code,
                 register=code,
                 value=value,
-                field="UNID_INV" if code == "0200" and field_name == "UNID" else label,
+                field=field_name,
                 declared_register=declared_code,
             )
 

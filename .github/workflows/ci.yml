@@ -11,8 +11,12 @@ concurrency:
 
 jobs:
   lint:
-    name: Lint & types
-    runs-on: ubuntu-latest
+    name: Lint & types · ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -21,11 +25,33 @@ jobs:
       - name: Install
         run: python -m pip install ruff mypy
       - name: Ruff
-        run: ruff check .
+        run: python -m ruff check .
       - name: Ruff format
-        run: ruff format --check .
+        run: python -m ruff format --check .
       - name: Mypy
-        run: mypy
+        run: python -m mypy
+
+  build:
+    name: Build distribution · ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install
+        run: python -m pip install --upgrade pip build
+      - name: Build wheel + sdist
+        run: python -m build
+      # --find-links (instead of a shell glob) works in bash, PowerShell and zsh.
+      - name: Smoke-test installed CLI
+        run: |
+          python -m pip install --find-links dist sped-py
+          sped --version
 
   test:
     name: Test py${{ matrix.python-version }} · ${{ matrix.os }}
@@ -59,5 +85,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install -e . pytest pytest-cov hypothesis
+      # addopts in pyproject.toml enforces >=95% coverage; a single slow test
+      # cannot reach it. Disable coverage explicitly for this opt-in job.
       - name: Run slow tests (streaming de grandes volumes)
-        run: python -m pytest -m slow
+        run: python -m pytest -m slow --no-cov

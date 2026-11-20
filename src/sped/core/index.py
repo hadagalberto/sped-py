@@ -152,7 +152,9 @@ class SpedIndex:
         _validate_header(header)
         data_base = len(MAGIC) + _U32.size + len(header_bytes)
         source_path = Path(source) if source is not None else Path(header["source"])
-        if validate and source_path.exists():
+        if validate:
+            if not source_path.exists():
+                raise ValueError("arquivo SPED de origem não encontrado para validar o índice")
             stat = source_path.stat()
             if (stat.st_size, stat.st_mtime_ns) != (
                 header["source_size"],

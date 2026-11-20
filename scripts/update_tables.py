@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Atualiza as tabelas oficiais agrupadas em ``src/sped/tables``.
 
-Nenhum código é inventado: todos os valores extraídos vêm das fontes oficiais
-abaixo, que também são gravadas no metadata de cada JSON gerado.
+Nenhum código é inventado: CFOP e NCM são extraídos das fontes oficiais
+abaixo; CST/CSOSN são o conjunto finito publicado nas tabelas oficiais
+citadas (conferência manual, com as URLs gravadas no metadata de cada JSON).
+Use --retrieved-at para registrar uma data diferente da verificação atual.
 
 Fontes (verificadas em 2026-11-20):
 
@@ -135,18 +137,22 @@ def parse_ncm(payload: bytes) -> tuple[list[str], str, str]:
     return codes, str(document["Data_Ultima_Atualizacao_NCM"]), str(document["Ato"])
 
 
-def document(name: str, url: str, extra: dict[str, Any]) -> dict[str, Any]:
+def document(
+    name: str, url: str, extra: dict[str, Any], retrieved_at: str = RETRIEVED_AT
+) -> dict[str, Any]:
     return {
         "metadata": {
             "name": name,
             "source_url": url,
-            "retrieved_at": RETRIEVED_AT,
+            "retrieved_at": retrieved_at,
             **extra,
         }
     }
 
 
-def build_documents(cfop: CfopTable, ncm: tuple[list[str], str, str]) -> dict[str, dict[str, Any]]:
+def build_documents(
+    cfop: CfopTable, ncm: tuple[list[str], str, str], retrieved_at: str = RETRIEVED_AT
+) -> dict[str, dict[str, Any]]:
     """Build the JSON documents written by this script."""
     ncm_codes, ncm_date, ncm_act = ncm
     cfop_doc = document(
@@ -160,6 +166,7 @@ def build_documents(cfop: CfopTable, ncm: tuple[list[str], str, str]) -> dict[st
             ),
             "count": len(cfop.codes),
         },
+        retrieved_at,
     )
     cfop_doc["codes"] = dict(sorted(cfop.codes.items()))
     cfop_doc["title_codes"] = list(cfop.title_codes)
@@ -176,6 +183,7 @@ def build_documents(cfop: CfopTable, ncm: tuple[list[str], str, str]) -> dict[st
             ),
             "count": len(ncm_codes),
         },
+        retrieved_at,
     )
     ncm_doc["codes"] = ncm_codes
 
@@ -186,6 +194,7 @@ def build_documents(cfop: CfopTable, ncm: tuple[list[str], str, str]) -> dict[st
             "law": "Guia Prático EFD ICMS/IPI v3.2.4 Cap. IV subseção 1.1; Ajuste SINIEF 03/10",
             "csosn_source_url": CSOSN_URL,
         },
+        retrieved_at,
     )
     cst_doc["tables"] = {
         "origem": list(CST_ORIGEM),
@@ -208,12 +217,17 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--offline", action="store_true", help="usa arquivos em tmp/tables_cache")
     parser.add_argument("--check", action="store_true", help="apenas confere se está atualizado")
+    parser.add_argument(
+        "--retrieved-at",
+        default=RETRIEVED_AT,
+        help="data de verificação a gravar no metadata (ISO-8601)",
+    )
     parser.add_argument("--output", type=Path, default=OUTPUT, help=argparse.SUPPRESS)
     args = parser.parse_args(argv)
 
     cfop = parse_cfop(fetch(CFOP_URL, "cfop.html", offline=args.offline))
     ncm = parse_ncm(fetch(NCM_URL, "ncm.json", offline=args.offline))
-    docs = build_documents(cfop, ncm)
+    docs = build_documents(cfop, ncm, args.retrieved_at)
     if args.check:
         stale = []
         for name, doc in docs.items():

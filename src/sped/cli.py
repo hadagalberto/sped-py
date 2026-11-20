@@ -26,17 +26,22 @@ from sped.analysis import (
     split_file,
     summarize_file,
 )
-from sped.core.encoding import iter_lines, split_line
+from sped.core.encoding import detect_encoding, iter_lines, split_line
 from sped.core.reader import read
 from sped.core.writer import write
 from sped.exports import MissingOptionalDependencyError, SpedExport
 from sped.layouts import available_versions, detect_layout, version_info
 from sped.validation import validate
+from sped.validation.rules import Severity
 
 EXIT_OK: Final = 0
 EXIT_ISSUES: Final = 1
 EXIT_USAGE: Final = 2
 EXIT_IO: Final = 3
+
+
+class UsageError(ValueError):
+    """Invalid command usage: mapped to ``EXIT_USAGE`` instead of ``EXIT_IO``."""
 
 
 def _json(payload: object) -> None:
@@ -86,7 +91,10 @@ def _cmd_validate(args: argparse.Namespace) -> int:
             print(f"{issue.rule} linha {issue.line_no} {issue.code}: {issue.message}")
     else:
         print("OK: nenhum problema encontrado")
-    return EXIT_ISSUES if issues else EXIT_OK
+    # SPEC: non-zero only on *errors*. Warnings are reported but do not fail
+    # the command (they are non-blocking advisories).
+    errors = any(issue.severity is Severity.ERROR for issue in issues)
+    return EXIT_ISSUES if errors else EXIT_OK
 
 
 def _cmd_export(args: argparse.Namespace) -> int:
@@ -125,6 +133,8 @@ def _cmd_export(args: argparse.Namespace) -> int:
 
 
 def _cmd_diff(args: argparse.Namespace) -> int:
+    if args.limit < 0:
+        raise UsageError("--limit não pode ser negativo")
     result = diff_files(args.a, args.b, limit=args.limit)
     if args.json:
         _json(result.as_dict())
@@ -143,14 +153,20 @@ def _cmd_diff(args: argparse.Namespace) -> int:
 
 
 def _cmd_fix_totals(args: argparse.Namespace) -> int:
+    encoding = args.encoding
+    if encoding is None:
+        with open(args.arquivo, "rb") as handle:
+            encoding = detect_encoding(handle.read(8192))
     source_lines = [
-        (split[0], split[1]) for line in iter_lines(args.arquivo) if (split := split_line(line))
+        (split[0], split[1])
+        for line in iter_lines(args.arquivo, encoding)
+        if (split := split_line(line))
     ]
     try:
         layout = detect_layout(args.arquivo)
     except ValueError:
         layout = None
-    count = write(source_lines, args.saida, encoding=args.encoding, layout=layout)
+    count = write(source_lines, args.saida, encoding=encoding, layout=layout)
     if args.json:
         _json({"arquivo": str(args.saida), "linhas": count})
     else:
@@ -200,6 +216,12 @@ def _cmd_recompute_apuracao(args: argparse.Namespace) -> int:
 
 
 def _cmd_merge(args: argparse.Namespace) -> int:
+    detected = [detect_layout(path) for path in args.arquivos]
+    if len({(item.obrigacao, item.cod_ver) for item in detected}) > 1:
+        raise UsageError(
+            "leiautes incompatíveis: "
+            + ", ".join(f"{item.obrigacao}/{item.cod_ver}" for item in detected)
+        )
     target = merge_files(args.arquivos, args.saida)
     if args.json:
         _json({"arquivo": str(target), "entradas": [str(p) for p in args.arquivos]})
@@ -255,7 +277,9 @@ def build_parser() -> argparse.ArgumentParser:  # noqa: PLR0915
     fix = sub.add_parser("fix-totals", help="recomputa x990/9900/9999")
     fix.add_argument("arquivo")
     fix.add_argument("-o", "--saida", required=True)
-    fix.add_argument("--encoding", default="latin-1")
+    fix.add_argument(
+        "--encoding", default=None, help="codificação de entrada/saída (padrão: detectar)"
+    )
     fix.add_argument("--json", action="store_true")
     fix.set_defaults(func=_cmd_fix_totals)
 
@@ -297,8 +321,14 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = parser.parse_args(argv)
     try:
         return int(args.func(args))
+    except UsageError as exc:
+        print(f"uso inválido: {exc}", file=sys.stderr)
+        return EXIT_USAGE
     except MissingOptionalDependencyError as exc:
         print(str(exc), file=sys.stderr)
+        return EXIT_USAGE
+    except ImportError as exc:
+        print(f"dependência opcional ausente: {exc}", file=sys.stderr)
         return EXIT_USAGE
     except (OSError, ValueError, KeyError) as exc:
         print(f"erro: {exc}", file=sys.stderr)

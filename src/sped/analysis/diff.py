@@ -31,7 +31,12 @@ def _records(path: str | Path) -> list[Line]:
     """Lê os registros de ``path`` ignorando linhas vazias e assinaturas."""
     result: list[Line] = []
     for line_no, raw in enumerate(iter_lines(path), start=1):
-        split = split_line(raw)
+        try:
+            split = split_line(raw)
+        except ValueError:
+            # Malformed framing must not abort an offline comparison: treat the
+            # physical line as unreadable and keep aligning the valid records.
+            continue
         if split is not None:
             result.append((f"{line_no}:{split[0]}", split[1]))
     return result
