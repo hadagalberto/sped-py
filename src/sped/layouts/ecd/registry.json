@@ -1,0 +1,23 @@
+{
+  "obrigacao": "ecd",
+  "versions": [
+    {
+      "cod_ver": "008",
+      "versao": "8.00",
+      "valid_from": "2019-01-01",
+      "valid_to": "2019-12-31",
+      "source_url": "http://sped.rfb.gov.br/arquivo/download/4217",
+      "source_date": "2019-11-01",
+      "file": "008.json"
+    },
+    {
+      "cod_ver": "009",
+      "versao": "9.00",
+      "valid_from": "2020-01-01",
+      "valid_to": "2099-12-31",
+      "source_url": "http://sped.rfb.gov.br/arquivo/download/7989",
+      "source_date": "2026-05-01",
+      "file": "009.json"
+    }
+  ]
+}

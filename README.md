@@ -6,7 +6,11 @@ arquivos de vários GB em memória constante.
 
 - Python ≥ 3.10, **zero dependências obrigatórias**.
 - Leiautes versionados gerados a partir das tabelas oficiais do Portal SPED e
-  da CONFAZ (CODs 013 a 021, exercícios de 2019 a 2027).
+  da CONFAZ, para **todas as obrigações e versões de 2019 em diante**:
+  EFD ICMS/IPI (013–021), EFD-Contribuições (005–006), ECD (008–009) e ECF
+  (006–012).
+- Hierarquia de registros com níveis publicados nos manuais e iteração lazy;
+  índice opcional em disco para acesso aleatório por registro.
 - `Decimal` para valores monetários, datas `DDMMAAAA` convertidas para `date`.
 - CLI `sped` com `info`, `validate`, `export`, `diff` e `fix-totals`.
 
@@ -46,6 +50,33 @@ with read("efd.txt") as arquivo:
     print(registro.get("VL_ITEM"))  # Decimal('100.00')
 ```
 
+A obrigação e a versão são detectadas automaticamente (para a ECD a versão vem
+de `I010.COD_VER_LC` ou, na ausência desse registro, do ano de `0000.DT_INI`):
+
+```python
+from sped.layouts import detect_layout, available_versions
+
+layout = detect_layout("arquivo.txt")
+print(layout.obrigacao, layout.cod_ver, available_versions(layout.obrigacao))
+```
+
+### Hierarquia e índice
+
+```python
+from sped.core.hierarchy import RecordTree
+from sped.core.index import IndexedReader, build_index
+from sped.core.reader import read
+
+with read("arquivo.txt") as arquivo:
+    for entrada in RecordTree(arquivo, arquivo.layout).iter_entries():
+        print(entrada.line_no, entrada.code, entrada.level, entrada.parent)
+
+indice = build_index("arquivo.txt")  # grava arquivo.txt.spedidx
+leitor = IndexedReader("arquivo.txt")  # reaproveita/cria o índice
+for registro in leitor.by_type("C170"):  # só busca as linhas C170
+    print(registro.get("VL_ITEM"))
+```
+
 ## CLI
 
 ```bash
@@ -59,18 +90,34 @@ sped fix-totals efd.txt -o corrigido.txt
 
 ## Leiautes e fonte oficial
 
-`src/sped/layouts/efd_icmsipi/<COD_VER>.json` contém todos os registros e
-campos extraídos das tabelas publicadas pelo
+Os JSON em `src/sped/layouts/<obrigacao>/<COD_VER>.json` contêm todos os
+registros e campos extraídos das tabelas publicadas pelo
 [Portal SPED](http://sped.rfb.gov.br/item/show/1573) e pela
 [CONFAZ](https://www.confaz.fazenda.gov.br/legislacao/arquivo-manuais).
-Cada JSON registra `source_url`, `source_date`, vigência e o número de campos
-preenchidos a partir do guia estruturado quando o PDF oficial não desenhava a
-linha da célula. O script gerador é `scripts/generate_layouts.py`:
+Cada JSON registra `source_url`, `source_date` e vigência. Fontes utilizadas
+(todas oficiais, verificadas em 2026-11-20):
+
+- EFD ICMS/IPI — [Guias Práticos e Notas Técnicas do Portal SPED](http://sped.rfb.gov.br/item/show/1573).
+- EFD-Contribuições — [Guia Prático v1.32 (item 4175, COD_VER 005)](http://sped.rfb.gov.br/item/show/4175)
+  e [v1.35 (item 5837, COD_VER 006)](http://sped.rfb.gov.br/item/show/5837);
+  tabela oficial 3.1.1 "Versão do Leiaute".
+- ECD — [Manual do Leiaute 8 (item 4217)](http://sped.rfb.gov.br/item/show/4217)
+  e [Leiaute 9 (item 7989)](http://sped.rfb.gov.br/item/show/7989);
+  `I010.COD_VER_LC` = 8.00 / 9.00.
+- ECF — [Manuais dos Leiautes 6 a 12 (item 1644)](http://sped.rfb.gov.br/item/show/1644);
+  `0000.COD_VER` = 0006 a 0012.
+
+Scripts geradores (com `--offline` para usar o cache em `tmp/pdf`):
 
 ```bash
-python scripts/generate_layouts.py          # busca fontes oficiais e gera tudo
-python scripts/generate_layouts.py --offline
+python scripts/generate_layouts.py
+python scripts/generate_layouts_accounting.py
 ```
+
+Nenhuma posição de campo é inventada: as tabelas estruturadas dos manuais
+oficiais são extraídas diretamente pelos scripts. Pesquisas posteriores que
+alteram campos sem criar novo COD_VER são refletidas no último guia/manual
+publicado daquela versão.
 
 ## Desenvolvimento
 

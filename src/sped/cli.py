@@ -14,13 +14,13 @@ from sped.core.encoding import iter_lines, split_line
 from sped.core.reader import SpedReader
 from sped.core.validation import validate
 from sped.core.writer import write
-from sped.layouts import available_versions, detect_cod_ver, load_layout, version_info
+from sped.layouts import available_versions, detect_layout, version_info
 
 
 def _cmd_info(args: argparse.Namespace) -> int:
-    cod_ver = detect_cod_ver(args.arquivo)
-    layout = load_layout(cod_ver)
-    info = version_info(cod_ver)
+    layout = detect_layout(args.arquivo)
+    cod_ver = layout.cod_ver
+    info = version_info(cod_ver, layout.obrigacao)
     registers = list(layout.registers.values())
     field_count = sum(len(register.fields) for register in registers)
     blocks = sorted({register.code[0] for register in registers})
@@ -32,7 +32,7 @@ def _cmd_info(args: argparse.Namespace) -> int:
     print(f"Registros:   {len(registers)}")
     print(f"Campos:      {field_count}")
     print(f"Blocos:      {', '.join(blocks)}")
-    print(f"Versões:     {', '.join(available_versions())}")
+    print(f"Versões:     {', '.join(available_versions(layout.obrigacao))}")
     if args.json:
         print(
             json.dumps(
@@ -40,6 +40,7 @@ def _cmd_info(args: argparse.Namespace) -> int:
                     "arquivo": str(args.arquivo),
                     "cod_ver": cod_ver,
                     "obrigacao": layout.obrigacao,
+                    "versoes": list(available_versions(layout.obrigacao)),
                     "versao": layout.versao,
                     **{key: value for key, value in info.items() if key != "file"},
                     "registros": len(registers),
@@ -65,8 +66,7 @@ def _cmd_validate(args: argparse.Namespace) -> int:
 
 
 def _cmd_export(args: argparse.Namespace) -> int:
-    cod_ver = detect_cod_ver(args.arquivo)
-    layout = load_layout(cod_ver)
+    layout = detect_layout(args.arquivo)
     output = Path(args.saida)
     output.mkdir(parents=True, exist_ok=True)
     grouped: dict[str, list[tuple[str, ...]]] = {}
@@ -136,7 +136,11 @@ def _cmd_fix_totals(args: argparse.Namespace) -> int:
         split = split_line(line)
         if split is not None:
             lines.append(split)
-    count = write(lines, args.saida, encoding=args.encoding)
+    try:
+        layout = detect_layout(args.arquivo)
+    except ValueError:
+        layout = None
+    count = write(lines, args.saida, encoding=args.encoding, layout=layout)
     print(f"Arquivo corrigido: {args.saida} ({count} linhas)")
     return 0
 

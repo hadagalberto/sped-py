@@ -410,8 +410,13 @@ def merge(
     return dict(sorted(merged.items())), gap_count
 
 
-def validate_layout(document: dict[str, Any]) -> None:
-    """Validação rígida antes de gravar: nada inválido é escrito."""
+def validate_layout(document: dict[str, Any], *, enforce_block_closings: bool = True) -> None:
+    """Validação rígida antes de gravar: nada inválido é escrito.
+
+    ``enforce_block_closings=False`` é usado apenas quando o próprio manual
+    oficial não publica um ``x990`` para determinado bloco (ex.: bloco S do
+    leiaute 12 da ECF); o gerador nunca inventa esse registro.
+    """
     problems: list[str] = []
     registers = document["registers"]
     for required in ("0000", "0001", "0990", "9001", "9900", "9990", "9999"):
@@ -432,7 +437,7 @@ def validate_layout(document: dict[str, Any]) -> None:
             if field_def["type"] not in {"C", "N"}:
                 problems.append(f"{code}.{index}: tipo inválido")
         block = code[0]
-        if code.endswith("001") and f"{block}990" not in registers:
+        if enforce_block_closings and code.endswith("001") and f"{block}990" not in registers:
             problems.append(f"bloco {block}: sem {block}990")
     if problems:
         raise ValueError("; ".join(problems[:20]))

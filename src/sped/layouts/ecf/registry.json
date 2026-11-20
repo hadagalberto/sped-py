@@ -1,0 +1,68 @@
+{
+  "obrigacao": "ecf",
+  "versions": [
+    {
+      "cod_ver": "006",
+      "versao": "6.0",
+      "valid_from": "2019-01-01",
+      "valid_to": "2019-12-31",
+      "source_url": "http://sped.rfb.gov.br/arquivo/download/4271",
+      "source_date": "2019-12-01",
+      "file": "006.json"
+    },
+    {
+      "cod_ver": "007",
+      "versao": "7.0",
+      "valid_from": "2020-01-01",
+      "valid_to": "2020-12-31",
+      "source_url": "http://sped.rfb.gov.br/arquivo/download/5716",
+      "source_date": "2020-12-01",
+      "file": "007.json"
+    },
+    {
+      "cod_ver": "008",
+      "versao": "8.0",
+      "valid_from": "2021-01-01",
+      "valid_to": "2021-12-31",
+      "source_url": "http://sped.rfb.gov.br/arquivo/download/5971",
+      "source_date": "2022-01-01",
+      "file": "008.json"
+    },
+    {
+      "cod_ver": "009",
+      "versao": "9.0",
+      "valid_from": "2022-01-01",
+      "valid_to": "2022-12-31",
+      "source_url": "http://sped.rfb.gov.br/arquivo/download/7145",
+      "source_date": "2022-12-01",
+      "file": "009.json"
+    },
+    {
+      "cod_ver": "010",
+      "versao": "10.0",
+      "valid_from": "2023-01-01",
+      "valid_to": "2023-12-31",
+      "source_url": "http://sped.rfb.gov.br/arquivo/download/7306",
+      "source_date": "2024-04-01",
+      "file": "010.json"
+    },
+    {
+      "cod_ver": "011",
+      "versao": "11.0",
+      "valid_from": "2024-01-01",
+      "valid_to": "2024-12-31",
+      "source_url": "http://sped.rfb.gov.br/arquivo/download/7626",
+      "source_date": "2025-09-29",
+      "file": "011.json"
+    },
+    {
+      "cod_ver": "012",
+      "versao": "12.0",
+      "valid_from": "2025-01-01",
+      "valid_to": "2099-12-31",
+      "source_url": "http://sped.rfb.gov.br/arquivo/download/8004",
+      "source_date": "2026-05-20",
+      "file": "012.json"
+    }
+  ]
+}

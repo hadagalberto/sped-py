@@ -8,7 +8,7 @@ from typing import Final
 
 from sped.core.encoding import iter_lines, split_line
 from sped.core.reader import SpedParseError, SpedReader
-from sped.core.types import Record
+from sped.core.types import Layout, Record
 
 REQUIRED_RECORDS: Final[tuple[str, ...]] = ("0000", "0001", "0990", "9001", "9900", "9990", "9999")
 
@@ -43,8 +43,10 @@ def validate(path: str | Path) -> list[ValidationIssue]:  # noqa: PLR0912
 
     records: list[Record] = []
     codes: list[str] = []
+    layout: Layout | None = None
     try:
         reader = SpedReader(path, strict=False, on_issue=on_issue)
+        layout = reader.layout
     except ValueError as exc:
         # Sem COD_VER detectável não há leiaute: ainda assim inspecionamos o
         # arquivo cru para relatar os registros estruturais ausentes.
@@ -64,6 +66,8 @@ def validate(path: str | Path) -> list[ValidationIssue]:  # noqa: PLR0912
         codes = [record.code for record in records]
     seen = set(codes)
     for required in REQUIRED_RECORDS:
+        if layout is not None and required not in layout.registers:
+            continue
         if required not in seen:
             issues.append(
                 ValidationIssue(
@@ -78,7 +82,10 @@ def validate(path: str | Path) -> list[ValidationIssue]:  # noqa: PLR0912
         )
 
     for block in sorted({code[0] for code in codes if code[0] not in {"9"}}):
-        if f"{block}001" in seen and f"{block}990" not in seen:
+        closing = f"{block}990"
+        if layout is not None and closing not in layout.registers:
+            continue
+        if f"{block}001" in seen and closing not in seen:
             issues.append(
                 ValidationIssue(
                     "SPED-STRUCT", 0, f"{block}990", f"bloco {block} sem registro de encerramento"

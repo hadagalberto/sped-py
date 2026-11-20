@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "sped-py"
-version = "0.1.0"
+version = "0.2.0"
 description = "Leitura, validação, escrita e análise de arquivos SPED (EFD ICMS/IPI, EFD-Contribuições, ECD e ECF) em Python puro, com leitura streaming."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -78,8 +78,9 @@ exclude = ["tmp", ".sped-cache"]
 # Legacy geometry-based PDF parser kept for reference; superseded by
 # scripts/generate_layouts.py (table-based extraction).
 "scripts/_layout_pdf.py" = ["RUF002", "RUF003", "SIM102", "PLR0912", "PLR0915", "PLR0917", "PLC0206"]
-# The generator mirrors the official documents' branching structure.
+# The generators mirror the official documents' branching structure.
 "scripts/generate_layouts.py" = ["PLR0912", "SIM102"]
+"scripts/generate_layouts_accounting.py" = ["PLR0912", "SIM102"]
 
 [tool.ruff.format]
 quote-style = "double"

@@ -1,8 +1,13 @@
-"""Fábrica de arquivos EFD ICMS/IPI sintéticos, porém realistas.
+"""Fábrica de arquivos SPED sintéticos, porém realistas.
 
 Nenhum dado de contribuinte real é usado: CNPJ, inscrição estadual, nomes e
 valores são fixtures determinísticos.  Os arquivos respeitam o leiaute oficial
 carregado pelo ``COD_VER`` e passam nas validações do leitor.
+
+Todas as quatro obrigações são cobertas (EFD ICMS/IPI, EFD-Contribuições, ECD
+e ECF).  A fábrica escolhe registros presentes em **todas** as versões de cada
+obrigação, de modo que um único gerador produza fixtures válidas para cada
+``COD_VER`` publicado.
 """
 
 from __future__ import annotations
@@ -25,12 +30,76 @@ BROKEN_KINDS: Final[tuple[str, ...]] = (
     "broken_framing",
 )
 
+#: Registros representativos comuns a todas as versões de cada obrigação.
+SEQUENCES: Final[dict[str, tuple[str, ...]]] = {
+    "efd_icmsipi": (
+        "0000",
+        "0001",
+        "0005",
+        "0100",
+        "0150",
+        "0190",
+        "0200",
+        "0990",
+        "C001",
+        "C100",
+        "C170",
+        "C190",
+        "C990",
+        "E001",
+        "E110",
+        "E990",
+        "9001",
+    ),
+    "efd_contribuicoes": (
+        "0000",
+        "0001",
+        "0110",
+        "0150",
+        "0200",
+        "C001",
+        "C100",
+        "C170",
+        "M001",
+        "M210",
+        "9001",
+    ),
+    "ecd": (
+        "0000",
+        "0001",
+        "0007",
+        "0150",
+        "C001",
+        "I001",
+        "I010",
+        "I050",
+        "I150",
+        "I155",
+        "J001",
+        "9001",
+    ),
+    "ecf": (
+        "0000",
+        "0001",
+        "0010",
+        "0930",
+        "C001",
+        "C040",
+        "E001",
+        "E010",
+        "J001",
+        "J050",
+        "9001",
+    ),
+}
+
 
 @dataclass(frozen=True, slots=True)
 class SyntheticOptions:
     """Parâmetros determinísticos da fábrica."""
 
     cod_ver: str = "020"
+    obrigacao: str = "efd_icmsipi"
     cnpj: str = "12345678000195"
     ie: str = "123456789012"
     uf: str = "SP"
@@ -56,10 +125,10 @@ def _values(  # noqa: PLR0912
             result.append(overrides[definition.name])
         elif definition.valid_values:
             result.append(definition.valid_values[0])
-        elif definition.name.startswith("DT_"):
-            result.append("01012024")
+        elif definition.is_date or definition.name.startswith("DT_"):
+            result.append(overrides.get("DT_INI", "01012024"))
         elif definition.name in {"CNPJ", "CNPJ_CPF_EMIT"}:
-            result.append("12345678000195")
+            result.append(overrides.get("CNPJ", "12345678000195"))
         elif definition.ftype == "N":
             if definition.dec:
                 result.append("10000" if definition.dec == 2 else "1" + "0" * definition.dec)
@@ -76,110 +145,80 @@ def _values(  # noqa: PLR0912
     return tuple(result)
 
 
+def _period(layout: Layout, options: SyntheticOptions) -> tuple[str, str]:
+    """Período coerente com a vigência oficial do leiaute."""
+    if options.obrigacao == "efd_icmsipi":
+        return options.dt_ini, options.dt_fin
+    year = layout.valid_from[:4]
+    if not year.isdigit():
+        year = "2024"
+    return f"0101{year}", f"3112{year}"
+
+
+def _overrides(layout: Layout, options: SyntheticOptions) -> dict[str, str]:
+    dt_ini, dt_fin = _period(layout, options)
+    values: dict[str, str] = {
+        # A ECF publica COD_VER com 4 dígitos (0012); as demais, com 3.
+        "COD_VER": layout.cod_ver.zfill(4) if options.obrigacao == "ecf" else layout.cod_ver,
+        "COD_VER_LC": layout.versao,
+        "DT_INI": dt_ini,
+        "DT_FIN": dt_fin,
+        "CNPJ": options.cnpj,
+        "CNPJ_CPF_EMIT": options.cnpj,
+        "CPF": "12345678909",
+        "UF": options.uf,
+        "IE": options.ie,
+        "LECD": "LECD",
+        "NOME_ESC": "LECF",
+        "IND_MOV": "0",
+        "IND_DAD": "0",
+        "IND_ESC": "G",
+        "TIPO_ESCRIT": "0",
+        "RETIFICADORA": "N",
+        "TIP_ECF": "0",
+        "COD_PART": options.participant,
+        "COD_ITEM": options.item,
+        "UNID": "UN",
+        "UNID_INV": "UN",
+        "COD_MOD": "55",
+        "COD_SIT": "00",
+        "IND_OPER": "0",
+        "IND_EMIT": "1",
+        "CST_ICMS": "000",
+        "CFOP": "1101",
+        "CHV_NFE": "0" * 44,
+        "DT_DOC": dt_ini,
+        "DT_E_S": dt_ini,
+        "NUM_ITEM": "1",
+        "QTD": "1",
+    }
+    return values
+
+
 def build_records(options: SyntheticOptions | None = None) -> list[OutputRecord]:
     """Return a realistic, complete record sequence for the given version."""
     opts = options or SyntheticOptions()
-    layout = load_layout(opts.cod_ver)
-    records: list[OutputRecord] = [
-        (
-            "0000",
-            _values(
-                layout,
-                "0000",
-                {
-                    "COD_VER": opts.cod_ver,
-                    "COD_FIN": "0",
-                    "DT_INI": opts.dt_ini,
-                    "DT_FIN": opts.dt_fin,
-                    "CNPJ": opts.cnpj,
-                    "UF": opts.uf,
-                    "IE": opts.ie,
-                },
-            ),
-        ),
-        ("0001", _values(layout, "0001", {"IND_MOV": "0"})),
-        ("0005", _values(layout, "0005", {})),
-        ("0100", _values(layout, "0100", {"CPF": "12345678909"})),
-        ("0150", _values(layout, "0150", {"COD_PART": opts.participant, "COD_PAIS": "1058"})),
-        ("0190", _values(layout, "0190", {"UNID": "UN", "DESCR": "Unidade"})),
-        ("0200", _values(layout, "0200", {"COD_ITEM": opts.item, "UNID_INV": "UN"})),
-        ("0990", _values(layout, "0990", {})),
-        (
-            "C001",
-            _values(
-                layout,
-                "C001",
-                {"IND_MOV": "0"} if "IND_MOV" in layout.register("C001").field_names else {},
-            ),
-        ),
-        (
-            "C100",
-            _values(
-                layout,
-                "C100",
-                {
-                    "IND_OPER": "0",
-                    "IND_EMIT": "1",
-                    "COD_PART": opts.participant,
-                    "COD_MOD": "55",
-                    "COD_SIT": "00",
-                    "SER": "1",
-                    "NUM_DOC": "1",
-                    "CHV_NFE": "0" * 44,
-                    "DT_DOC": opts.dt_ini,
-                    "DT_E_S": opts.dt_ini,
-                },
-            ),
-        ),
-        (
-            "C170",
-            _values(
-                layout,
-                "C170",
-                {
-                    "NUM_ITEM": "1",
-                    "COD_ITEM": opts.item,
-                    "QTD": "1",
-                    "UNID": "UN",
-                    "CST_ICMS": "000",
-                    "CFOP": "1101",
-                },
-            ),
-        ),
-        (
-            "C190",
-            _values(
-                layout,
-                "C190",
-                {
-                    "CST_ICMS": "000",
-                    "CFOP": "1101",
-                    "ALIQ_ICMS": "0",
-                    "VL_OPR": "10000",
-                    "VL_BC_ICMS": "10000",
-                    "VL_ICMS": "0",
-                },
-            ),
-        ),
-        ("C990", _values(layout, "C990", {})),
-        ("E001", _values(layout, "E001", {"IND_MOV": "0"})),
-        ("E110", _values(layout, "E110", {})),
-        ("E990", _values(layout, "E990", {})),
-        ("9001", _values(layout, "9001", {"IND_MOV": "0"})),
-    ]
-    return records
+    layout = load_layout(opts.cod_ver, opts.obrigacao)
+    sequence = SEQUENCES[opts.obrigacao]
+    overrides = _overrides(layout, opts)
+    for code in sequence:
+        if code not in layout.registers:
+            raise ValueError(f"{opts.obrigacao}/{opts.cod_ver}: registro {code} fora do leiaute")
+    return [(code, _values(layout, code, overrides)) for code in sequence]
 
 
 def write_synthetic(path: str | Path, options: SyntheticOptions | None = None) -> Path:
-    """Write a valid synthetic EFD file and return its path."""
+    """Write a valid synthetic SPED file and return its path."""
     opts = options or SyntheticOptions()
     destination = Path(path)
+    layout = load_layout(opts.cod_ver, opts.obrigacao)
     buffer = io.BytesIO()
     write(
         build_records(opts),
         buffer,
         encoding=opts.encoding,
         line_ending=opts.line_ending,
+        layout=layout,
     )
     data = buffer.getvalue()
     if opts.with_signature:

@@ -3,6 +3,23 @@
 Todas as mudanças notáveis são documentadas aqui. Formato baseado em
 [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 
+## [0.2.0] - 2026-11-20
+
+### Added
+
+- Leiautes oficiais de EFD-Contribuições (COD_VER 005/006), ECD (008/009) e
+  ECF (006–012), extraídos dos guias/manuais do Portal SPED e citados nos
+  scripts geradores e no README. Detecção automática da obrigação e da versão
+  (ECD via `I010.COD_VER_LC`).
+- Hierarquia lazy de registros (`sped.core.hierarchy`) com níveis publicados,
+  links pai/filho e iteração de stream com memória proporcional à profundidade.
+- Índice opcional em disco (`sped.core.index`, `sped.core.index.IndexedReader`)
+  para acesso aleatório por registro, com validação de fingerprint do arquivo.
+- Fábrica sintética e testes de round trip byte-idêntico para as 20 combinações
+  obrigação/versão, além de vetores inválidos conhecidos para cada uma.
+- Escritor e validador cientes do leiaute: nenhum registro estrutural ausente
+  da tabela oficial é inventado (ex.: ECF leiaute 12 não define S990).
+
 ## [0.1.0] - 2026-11-20
 
 ### Added

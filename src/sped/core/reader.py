@@ -9,7 +9,80 @@ from typing import TypeAlias
 
 from sped.core.encoding import iter_lines, split_line
 from sped.core.types import Field, FieldDef, Layout, Record, RegisterDef
-from sped.layouts import detect_cod_ver, load_layout
+from sped.layouts import detect_layout
+
+
+def _issue(
+    line_no: int,
+    code: str,
+    message: str,
+    *,
+    strict: bool,
+    on_issue: IssueHandler | None,
+) -> None:
+    """Report an issue through ``on_issue`` and/or raise in strict mode."""
+    if on_issue is not None:
+        on_issue(line_no, code, message)
+    if strict:
+        raise SpedParseError(line_no, message)
+
+
+def parse_record(
+    line_no: int,
+    code: str,
+    values: tuple[str, ...],
+    raw: str,
+    layout: Layout,
+    *,
+    strict: bool = True,
+    on_issue: IssueHandler | None = None,
+) -> Record | None:
+    """Parse one already-split line against ``layout``.
+
+    Shared by the streaming reader and the on-disk index so that random
+    access returns exactly the same :class:`Record` objects as a full scan.
+    """
+    try:
+        definition: RegisterDef = layout.register(code)
+    except KeyError:
+        _issue(
+            line_no,
+            code,
+            f"registro {code!r} não existe no leiaute {layout.cod_ver}",
+            strict=strict,
+            on_issue=on_issue,
+        )
+        return None
+    fields: list[Field] = []
+    # O REG é implícito: a linha começa com |REG| e não repete o código
+    # como primeiro valor. As tabelas oficiais, porém, o descrevem como
+    # campo 01 — por isso ele é incluído no record e removido da contagem.
+    value_defs = definition.fields
+    if value_defs and value_defs[0].name == "REG":
+        reg_def = value_defs[0]
+        fields.append(Field(definition=reg_def, raw=code, value=code))
+        value_defs = value_defs[1:]
+    if len(values) != len(value_defs):
+        _issue(
+            line_no,
+            code,
+            f"{code}: esperados {len(value_defs)} campos, encontrados {len(values)}",
+            strict=strict,
+            on_issue=on_issue,
+        )
+    for field_def, raw_value in zip(value_defs, values, strict=False):
+        error = validate_field(field_def, raw_value, line_no=line_no, code=code)
+        if error is not None:
+            _issue(line_no, code, error, strict=strict, on_issue=on_issue)
+        value = field_def.coerce(raw_value)
+        if field_def.ftype == "N" and raw_value and isinstance(value, str):
+            message = f"{code}.{field_def.num:02d} ({field_def.name}): conversão numérica falhou"
+            if error is None:
+                _issue(line_no, code, message, strict=strict, on_issue=on_issue)
+                error = message
+        fields.append(Field(definition=field_def, raw=raw_value, value=value, error=error))
+    return Record(line_no=line_no, code=code, fields=tuple(fields), raw=raw)
+
 
 IssueHandler: TypeAlias = Callable[[int, str, str], None]
 
@@ -94,7 +167,7 @@ class SpedReader:
         self.encoding = encoding
         self.strict = strict
         self.on_issue = on_issue
-        self.layout = layout or load_layout(detect_cod_ver(self.path))
+        self.layout = layout or detect_layout(self.path)
         self.line_no = 0
 
     def __enter__(self) -> SpedReader:
@@ -104,48 +177,24 @@ class SpedReader:
         return None
 
     def _issue(self, line_no: int, code: str, message: str) -> None:
-        if self.on_issue is not None:
-            self.on_issue(line_no, code, message)
-        if self.strict:
-            raise SpedParseError(line_no, message)
+        _issue(
+            line_no,
+            code,
+            message,
+            strict=self.strict,
+            on_issue=self.on_issue,
+        )
 
     def _parse(self, line_no: int, code: str, values: tuple[str, ...], raw: str) -> Record | None:
-        try:
-            definition: RegisterDef = self.layout.register(code)
-        except KeyError:
-            self._issue(
-                line_no, code, f"registro {code!r} não existe no leiaute {self.layout.cod_ver}"
-            )
-            return None
-        fields: list[Field] = []
-        # O REG é implícito: a linha começa com |REG| e não repete o código
-        # como primeiro valor. As tabelas oficiais, porém, o descrevem como
-        # campo 01 — por isso ele é incluído no record e removido da contagem.
-        value_defs = definition.fields
-        if value_defs and value_defs[0].name == "REG":
-            reg_def = value_defs[0]
-            fields.append(Field(definition=reg_def, raw=code, value=code))
-            value_defs = value_defs[1:]
-        if len(values) != len(value_defs):
-            self._issue(
-                line_no,
-                code,
-                f"{code}: esperados {len(value_defs)} campos, encontrados {len(values)}",
-            )
-        for field_def, raw_value in zip(value_defs, values, strict=False):
-            error = validate_field(field_def, raw_value, line_no=line_no, code=code)
-            if error is not None:
-                self._issue(line_no, code, error)
-            value = field_def.coerce(raw_value)
-            if field_def.ftype == "N" and raw_value and isinstance(value, str):
-                message = (
-                    f"{code}.{field_def.num:02d} ({field_def.name}): conversão numérica falhou"
-                )
-                if error is None:
-                    self._issue(line_no, code, message)
-                    error = message
-            fields.append(Field(definition=field_def, raw=raw_value, value=value, error=error))
-        return Record(line_no=line_no, code=code, fields=tuple(fields), raw=raw)
+        return parse_record(
+            line_no,
+            code,
+            values,
+            raw,
+            self.layout,
+            strict=self.strict,
+            on_issue=self.on_issue,
+        )
 
     def iter_records(self) -> Iterator[Record]:
         """Yield parsed records one at a time."""

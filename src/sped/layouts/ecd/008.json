@@ -1,0 +1,4164 @@
+{
+ "metadata": {
+  "cod_ver": "008",
+  "gap_filled_fields": 0,
+  "obrigacao": "ecd",
+  "source_date": "2019-11-01",
+  "source_page": "http://sped.rfb.gov.br/item/show/4217",
+  "source_url": "http://sped.rfb.gov.br/arquivo/download/4217",
+  "valid_from": "2019-01-01",
+  "valid_to": "2019-12-31",
+  "versao": "8.00"
+ },
+ "registers": {
+  "0000": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “0000”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "“0000” Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “LECD”.",
+     "name": "LECD",
+     "num": 2,
+     "obrig": "“LECD” Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Data inicial das informações contidas no arquivo.",
+     "name": "DT_INI",
+     "num": 3,
+     "obrig": "- Sim [REGRA_DATA_INI_ MAIOR] [REGRA_INICIO_ PERIODO]",
+     "tam": "008",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Data final das informações contidas no arquivo.",
+     "name": "DT_FIN",
+     "num": 4,
+     "obrig": "- Sim [REGRA_FIM_ PERIODO]",
+     "tam": "008",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Nome empresarial da pessoa jurídica.",
+     "name": "NOME",
+     "num": 5,
+     "obrig": "- Sim -",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Número de inscrição da pessoa jurídica no CNPJ. Observação: Esse CNPJ é sempre da Sócia Ostensiva, no caso do arquivo da SCP.",
+     "name": "CNPJ",
+     "num": 6,
+     "obrig": "- Sim [REGRA_VALIDA_ CNPJ]",
+     "tam": "014",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Sigla da unidade da federação da pessoa jurídica.",
+     "name": "UF",
+     "num": 7,
+     "obrig": "- Sim [REGRA_TABELA_UF]",
+     "tam": "002",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Inscrição Estadual da pessoa jurídica.",
+     "name": "IE",
+     "num": 8,
+     "obrig": "- Não [REGRA_CAMPO_ CARACTERE_ INVALIDO]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código do município do domicílio fiscal da pessoa jurídica, conforme tabela do IBGE – Instituto Brasileiro de Geografia e Estatística.",
+     "name": "COD_MUN",
+     "num": 9,
+     "obrig": "- Não [REGRA_TABELA_ MUNICIPIO] [REGRA_COD_ MUN_INV_UF]",
+     "tam": "007",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Inscrição Municipal da pessoa jurídica.",
+     "name": "IM",
+     "num": 10,
+     "obrig": "- Não [REGRA_CAMPO_ CARACTERE_ INVALIDO]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador de situação especial (conforme tabela publicada pelo Sped).",
+     "name": "IND_SIT_ESP",
+     "num": 11,
+     "obrig": "- Não [REGRA_TABELA_ SITUACAO]",
+     "tam": "1",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador de situação no início do período (conforme tabela publicada pelo Sped).",
+     "name": "IND_SIT_INI_PER",
+     "num": 12,
+     "obrig": "- Sim [REGRA_TABELA_ SIT_ INICIO_PER]",
+     "tam": "1",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador de existência de NIRE: 0 – Empresa não possui registro na Junta Comercial (não possui NIRE) 1 – Empresa possui registro na Junta Comercial (possui NIRE)",
+     "name": "IND_NIRE",
+     "num": 13,
+     "obrig": "[0,1] Sim -",
+     "tam": "1",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador de finalidade da escrituração: 0 - Original 1 – Substituta",
+     "name": "IND_FIN_ESC",
+     "num": 14,
+     "obrig": "[0,1] Sim ",
+     "tam": "1",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Hash da escrituração substituída.",
+     "name": "COD_HASH_SUB",
+     "num": 15,
+     "obrig": "- Não [REGRA_HASH_ SUBSTITUIDA] [REGRA_VALIDA_ HEXADECIMAL]",
+     "tam": "40",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador de entidade sujeita a auditoria independente : 0 – Empresa não é entidade sujeita a auditoria independente. 1 – Empresa é entidade sujeita a auditoria independente – Ativo Total superior a R$ 240.000.000,00 ou Receita Bruta Anual superior R$300.000.000,00.",
+     "name": "IND_GRANDE_PORTE",
+     "num": 16,
+     "obrig": "[0; 1] Sim -",
+     "tam": "001",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador do tipo de ECD: 0 – ECD de empresa não participante de SCP como sócio ostensivo. 1 – ECD de empresa participante de SCP como sócio ostensivo. 2 – ECD da SCP.",
+     "name": "TIP_ECD",
+     "num": 17,
+     "obrig": "[0; 1; 2] Sim ",
+     "tam": "001",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "CNPJ da SCP (Art. 4º, XVII, da IN RFB nº 1.634, de 6 de maio de 2016). Observação: Só deve ser preenchido pela própria SCP com o CNPJ da SCP (Não é preenchido pelo sócio ostensivo).",
+     "name": "COD_SCP",
+     "num": 18,
+     "obrig": " Não [REGRA_SCP_ OBRIGATORIO] [REGRA_SCP_NAO_ PREENCHER] [REGRA_CNPJ_ DIFERENT E _ SCP] [REGRA_VALIDA_ CNPJ]",
+     "tam": "014",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Identificação de moeda funcional: Indica que a escrituração abrange valores com base na moeda funcional (art. 287 da Instrução Normativa RFB nº 1.700, de 14 de março de 2017). Observaç ão : D everá ser utilizado o registro I020 para informação de campos adicionais, conforme instruções do item 1.2 4.",
+     "name": "IDENT_MF",
+     "num": 19,
+     "obrig": "[S; N] Sim -",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Escriturações Contábeis Consolidadas: (Deve ser preenchido pela empresa controladora obrigada a informar demonstrações contábeis consolidadas, nos termos da Lei nº 6.404/76 e/ou do Pronunciamento Técnico CPC 36 – Demonstrações Consolidadas) S – Sim N – Não",
+     "name": "IND_ESC_CONS",
+     "num": 20,
+     "obrig": "[S; N] Sim [REGRA_CONGLOME RADO_MES_12]",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indica dor da modalidade de escrituração centralizada ou descentralizada: 0 – Escrituração Centralizada 1 – Escrituração Descentralizada",
+     "name": "IND_CENTRALIZADA",
+     "num": 21,
+     "obrig": "[0;1] Sim -",
+     "tam": "001",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador de mudança de plano de contas: 0 – Não houve mudança no plano de contas. 1 – Houve mudança no plano de contas.",
+     "name": "IND_MUDANC_PC",
+     "num": 22,
+     "obrig": "[0;1] Sim -",
+     "tam": "001",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código do Plano de Contas Referencial que será utilizado para o mapeamento de todas as contas analíticas: 1 – PJ em Geral – Lucro Real 2 – PJ em Geral – Lucro Presumido 3 – Financeiras – Lucro Real 4 – Seguradoras – Lucro Real 5 – Imunes e Isentas em Geral 6 – Imunes e Isentas – Financeiras 7 – Imunes e Isentas – Seguradoras 8 – Entidades Fechadas de Previdência Complementar 9 – Partidos Políticos 10 – Financeiras – Lucro Presumido Observação: Caso a pessoa jurídica não realize o mapeamento para os planos referenciais na ECD, este campo deve ficar em branco.",
+     "name": "COD_PLAN_REF",
+     "num": 23,
+     "obrig": "[1; 2; 3; 4; 5; 6; 7; 8; 9; 10] ou Vazio Não -",
+     "tam": "002",
+     "type": "C",
+     "valid_values": []
+    }
+   ],
+   "level": 0,
+   "occurrence": "Um por arquivo",
+   "title": "Abertura do Arquivo Digital e Identificação do Empresário ou da Sociedade Empresária.52"
+  },
+  "0001": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “0001”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "“0001” Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador de movimento: 0- Bloco com dados informados; 1- Bloco sem dados informados.",
+     "name": "IND_DAD",
+     "num": 2,
+     "obrig": "[0,1] Sim -",
+     "tam": "001",
+     "type": "N",
+     "valid_values": []
+    }
+   ],
+   "level": 1,
+   "occurrence": "Um por arquivo",
+   "title": "Abertura do Bloco 063"
+  },
+  "0007": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “0007”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "“0007” Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código da instituição responsável pela administração do cadastro (conforme tabela publicada pelo Sped).",
+     "name": "COD_ENT_REF",
+     "num": 2,
+     "obrig": "- Sim [REGRA_TABELA_ INSTITUICOES_CADASTRO]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código cadastral da pessoa jurídica na instituição identificada no campo 02.",
+     "name": "COD_INSCR",
+     "num": 3,
+     "obrig": "- Não [REGRA_VALIDA_ INSCRICAO]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    }
+   ],
+   "level": 2,
+   "occurrence": "Vários por arquivo",
+   "title": "Outras Inscrições Cadastrais da Pessoa Jurídica64"
+  },
+  "0020": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “0020”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "\"0020\" Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador de descentralização: 0 – Escrituração da matriz. 1 – Escrituração da filial.",
+     "name": "IND_DEC",
+     "num": 2,
+     "obrig": "[0,1] Sim [REGRA_CONGLOMERA DO_NA_MATRIZ]",
+     "tam": "001",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Número de inscrição da pessoa jurídica no CNPJ da matriz ou da filial.",
+     "name": "CNPJ",
+     "num": 3,
+     "obrig": "- Sim [ REGRA_VALIDA_CNPJ ] [REGRA_VERIFICA_CNPJ_ REG_0000_REG_0020] [REGRA_REGISTRO_ DUPLICADO] [ REGRA_DUPLICIDADE_ CNPJ _ REG_0000_REG_ 0020]",
+     "tam": "014",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Sigla da unidade da federação da matriz ou da filial.",
+     "name": "UF",
+     "num": 4,
+     "obrig": "- Sim [ REGRA_TABELA_UF ]",
+     "tam": "002",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Inscrição estadual da matriz ou da filial.",
+     "name": "IE",
+     "num": 5,
+     "obrig": "- Não [REGRA_CAMPO_ CARACTERE_INVALIDO]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código do município do domicílio da matriz ou da filial.",
+     "name": "COD_MUN",
+     "num": 6,
+     "obrig": "- Não [REGRA_TABELA_ MUNICIPIO]",
+     "tam": "007",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Número de Inscrição Municipal da matriz ou da filial.",
+     "name": "IM",
+     "num": 7,
+     "obrig": "- Não [REGRA_CAMPO_ CARACTERE_INVALIDO]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Número de Identificação do Registro de Empresas da matriz ou da filial na Junta Comercial.",
+     "name": "NIRE",
+     "num": 8,
+     "obrig": "- Não [ REGRA_VALIDA_NIRE ]",
+     "tam": "11",
+     "type": "N",
+     "valid_values": []
+    }
+   ],
+   "level": 2,
+   "occurrence": "Vários por arquivo (quando o arquivo se referir à escrituração da matriz) ou um por arquivo (quando se referir à escrituração da filial)",
+   "title": "Escrituração Contábil Descentralizada66"
+  },
+  "0150": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “0150”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "\"0150\" Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código de identificação do participante no arquivo criado pela própria pessoa jurídica.",
+     "name": "COD_PART",
+     "num": 2,
+     "obrig": "- Sim [REGRA_REGISTRO_ DUPLICADO]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Nome pessoal ou empresarial do participante.",
+     "name": "NOME",
+     "num": 3,
+     "obrig": "- Sim -",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código do país do participante, conforme a tabela do Banco Central do Brasil.",
+     "name": "COD_PAIS",
+     "num": 4,
+     "obrig": "- Sim [REGRA_TABELA_PAIS]",
+     "tam": "005",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "CNPJ do participante.",
+     "name": "CNPJ",
+     "num": 5,
+     "obrig": "- Não [ REGRA_VALIDA_CNPJ ]",
+     "tam": "014",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "CPF do participante.",
+     "name": "CPF",
+     "num": 6,
+     "obrig": "- Não [ REGRA_VALIDA_CPF ]",
+     "tam": "011",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Número de Identificação do Trabalhador, Pis, Pasep, SUS.",
+     "name": "NIT",
+     "num": 7,
+     "obrig": "- Não -",
+     "tam": "011",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Sigla da unidade da federação do participante.",
+     "name": "UF",
+     "num": 8,
+     "obrig": "- Não [REGRA_TABELA_UF] [REGRA_CAMPO_NAO_ OBRIGATORIO_PAIS_ BRASIL]",
+     "tam": "002",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Inscrição Estadual do participante.",
+     "name": "IE",
+     "num": 9,
+     "obrig": "- Não [REGRA_CAMPO_ CARACTERE_INVALIDO]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Inscrição Estadual do participante na unidade da federação do destinatário, na condição de contribuinte substituto.",
+     "name": "IE_ST",
+     "num": 10,
+     "obrig": "- Não [REGRA_CAMPO_ CARACTERE_INVALIDO]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código do município, conforme a tabela do IBGE.",
+     "name": "COD_MUN",
+     "num": 11,
+     "obrig": "- Não [REGRA_TABELA_ MUNICIPIO] [REGRA_CAMPO_NAO_ OBRIGATORIO_PAIS_ BRASIL]",
+     "tam": "007",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Inscrição Municipal do participante.",
+     "name": "IM",
+     "num": 12,
+     "obrig": "- Não [REGRA_CAMPO_ CARACTERE_INVALIDO]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Número de inscrição do participante na Suframa.",
+     "name": "SUFRAMA",
+     "num": 13,
+     "obrig": "- Não [REGRA_CAMPO_ CARACTERE_INVALIDO]",
+     "tam": "009",
+     "type": "C",
+     "valid_values": []
+    }
+   ],
+   "level": 2,
+   "occurrence": "Vários por arquivo",
+   "title": "Tabela de Cadastro do Participante70"
+  },
+  "0180": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “0180”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "\"0180\" Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código do relacionamento conforme tabela publicada pelo Sped.",
+     "name": "COD_REL",
+     "num": 2,
+     "obrig": "- Sim [REGRA_TABELA_ RELACIONAMENTO]",
+     "tam": "002",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Data do início do relacionamento.",
+     "name": "DT_INI_REL",
+     "num": 3,
+     "obrig": "- Sim [REGRA_DT_INI_MAIOR_ DT_FIN_REL]",
+     "tam": "008",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Data do término do relacionamento.",
+     "name": "DT_FIN_REL",
+     "num": 4,
+     "obrig": "- Não -",
+     "tam": "008",
+     "type": "N",
+     "valid_values": []
+    }
+   ],
+   "level": 3,
+   "occurrence": "Vários por arquivo",
+   "title": "Identificação do Relacionamento com o Participante73"
+  },
+  "0990": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “0990”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "\"0990\" Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Quantidade total de linhas do Bloco 0.",
+     "name": "QTD_LIN_0",
+     "num": 2,
+     "obrig": "- Sim [REGRA_QTD_LIN_ BLOCO_0]",
+     "tam": "-",
+     "type": "N",
+     "valid_values": []
+    }
+   ],
+   "level": 1,
+   "occurrence": "Um por arquivo",
+   "title": "Encerramento do Bloco 075"
+  },
+  "9001": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “9001”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "“9001” Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador de movimento: 0- Bloco com dados informados; 1- Bloco sem dados informados.",
+     "name": "IND_DAD",
+     "num": 2,
+     "obrig": "[0,1] Sim -",
+     "tam": "001",
+     "type": "N",
+     "valid_values": []
+    }
+   ],
+   "level": 1,
+   "occurrence": "Um por arquivo",
+   "title": "Abertura do Bloco 9212"
+  },
+  "9900": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “9900”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "“9900” Sim -",
+     "tam": "4",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Registro que será totalizado no próximo campo.",
+     "name": "REG_BLC",
+     "num": 2,
+     "obrig": "Somente tipos de registro previstos para a escrituração contábil digital Sim -",
+     "tam": "4",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Total de registros do tipo informado no campo anterior.",
+     "name": "QTD_REG_BLC",
+     "num": 3,
+     "obrig": "- Sim [REGRA_QTD_REG _BLC]",
+     "tam": "-",
+     "type": "N",
+     "valid_values": []
+    }
+   ],
+   "level": 2,
+   "occurrence": "Vários por arquivo",
+   "title": "Registros do Arquivo213"
+  },
+  "9990": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “9990”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "\"9990\" Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Quantidade total de linhas do Bloco 9.",
+     "name": "QTD_LIN_9",
+     "num": 2,
+     "obrig": "- Sim [REGRA_QRD_LIN_ BLOCO9]",
+     "tam": "-",
+     "type": "N",
+     "valid_values": []
+    }
+   ],
+   "level": 1,
+   "occurrence": "Um por arquivo",
+   "title": "Encerramento do Bloco 9214"
+  },
+  "9999": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “9999”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "\"9999\" Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Quantidade total de linhas do arquivo digital.",
+     "name": "QTD_LIN",
+     "num": 2,
+     "obrig": "- Sim [REGRA_QTD_LIN_ ARQUIVO]",
+     "tam": "-",
+     "type": "N",
+     "valid_values": []
+    }
+   ],
+   "level": 1,
+   "occurrence": "um (por arquivo)",
+   "title": "Encerramento do Arquivo Digital215"
+  },
+  "C001": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “ C 001”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "“C001” Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador de movimento: 0- Bloco com dados informados; 1- Bloco sem dados informados.",
+     "name": "IND_DAD",
+     "num": 2,
+     "obrig": "[0,1] Sim -",
+     "tam": "001",
+     "type": "N",
+     "valid_values": []
+    }
+   ],
+   "level": null,
+   "occurrence": null,
+   "title": "Abertura do Bloco C76"
+  },
+  "C040": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “ C040 ”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "“C0 40 ” Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Hashcode da ECD recuperada.",
+     "name": "HASH_ECD_REC",
+     "num": 2,
+     "obrig": "- Sim -",
+     "tam": "040",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Data inicial das informações contidas na ECD recuperada.",
+     "name": "DT_INI_ECD_REC",
+     "num": 3,
+     "obrig": "- Sim -",
+     "tam": "008",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Data final das informações contidas na ECD recuperada.",
+     "name": "DT_FIN_ECD_REC",
+     "num": 4,
+     "obrig": "- Sim -",
+     "tam": "008",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "CNPJ da ECD recuperada.",
+     "name": "CNPJ_ECD_REC",
+     "num": 5,
+     "obrig": "- Sim -",
+     "tam": "014",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador da forma de escrituração contábil: G – Livro Diário Geral. R – Livro Diário com Escrituração Resumida. B – Livro de Balancetes Diários.",
+     "name": "IND_ESC",
+     "num": 6,
+     "obrig": "[G;R;B] Sim -",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código da versão do leiaute.",
+     "name": "COD_VER_LC",
+     "num": 7,
+     "obrig": "- Sim -",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Número de ordem da escrituração.",
+     "name": "NUM_ORD",
+     "num": 8,
+     "obrig": "- Sim -",
+     "tam": "-",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Natureza do livro.",
+     "name": "NAT_LIVR",
+     "num": 9,
+     "obrig": "- Sim -",
+     "tam": "080",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador de situação especial da ECD recuperada: 1 – Cisão. 2 – Fusão. 3 - Incorporação. 4 – Extinção.",
+     "name": "IND_SIT_ESP_ECD_REC",
+     "num": 10,
+     "obrig": "[1;2;3;4] Não -",
+     "tam": "001",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador de existência de Nire: 0 – Pessoa jurídica não possui registro na Junta Comercial. 1 – Pessoa jurídica possui registro na Junta Comercial.",
+     "name": "IND_NIRE_ECD_REC",
+     "num": 11,
+     "obrig": "[0;1] Sim -",
+     "tam": "001",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador da finalidade da escrituração: 0 – Original. 1 – Substituta.",
+     "name": "IND_FIN_ESC_ECD_REC",
+     "num": 12,
+     "obrig": "[0;1] Sim -",
+     "tam": "001",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador do tipo da ECD: 0 – ECD de empresa não participante de SCP como sócio ostensivo. 1 – ECD de empresa participante de SCP como sócio ostensivo. 2 – ECD da SCP.",
+     "name": "TIP_ECD_REC",
+     "num": 13,
+     "obrig": "[0;1;2] - -",
+     "tam": "001",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "CNPJ da SCP.",
+     "name": "COD_SCP_ECD_REC",
+     "num": 14,
+     "obrig": "- Não -",
+     "tam": "014",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Identificação de moeda funcional: S – Sim N – Não",
+     "name": "IDENT_MF_ECD_REC",
+     "num": 15,
+     "obrig": "[S;N] Sim -",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Identificação de escriturações contábeis consolidadas: S – Sim N – Não",
+     "name": "IND_ESC_CONS_ECD_REC",
+     "num": 16,
+     "obrig": "[S;N] Sim -",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Identificação de escrituração contábil centralizada ou descentralizada: 0 – Escrituração centralizada. 1 – Escrituração descentralizada.",
+     "name": "IND_CENTRALIZADA_ECD_REC",
+     "num": 17,
+     "obrig": "[0;1] Não -",
+     "tam": "001",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicativo de mudança de plano de contas: 0 – Não houve alteração de plano de contas. 1 – Houve alteração de plano de contas.",
+     "name": "IND_MUDANCA_PC_ECD_REC",
+     "num": 18,
+     "obrig": "[0;1] Não -",
+     "tam": "001",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código do Plano de Contas Referencial que será utilizado para o mapeamento de todas as contas analíticas: 1 – PJ em Geral – Lucro Real. 2 – PJ em Geral – Lucro Presumido . 3 – Financeiras – Lucro Real. 4 – Seguradoras – Lucro Real. 5 – Imunes e Isentas em Geral. 6 – Imunes e Isentas – Financeiras. 7 – Imunes e Isentas – Seguradoras. 8 – Entidades Fechadas de Previdência Complementar. 9 – Partidos Políticos. 10 – Financeiras – Lucro Presumido.",
+     "name": "IND_PLANO_REF_ECD_REC",
+     "num": 19,
+     "obrig": "[0;1;2;3;4; 5;6;7;8;9;10] Não -",
+     "tam": "002",
+     "type": "N",
+     "valid_values": []
+    }
+   ],
+   "level": null,
+   "occurrence": null,
+   "title": "Identificação da ECD Recuperada77"
+  },
+  "C150": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “ C150 ”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "“C 150 ” Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Data inicial do período.",
+     "name": "DT_INI",
+     "num": 2,
+     "obrig": "- Sim -",
+     "tam": "008",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Data final do período.",
+     "name": "DT_FIN",
+     "num": 3,
+     "obrig": "- Sim -",
+     "tam": "008",
+     "type": "N",
+     "valid_values": []
+    }
+   ],
+   "level": null,
+   "occurrence": null,
+   "title": "Saldos Periódicos Recuperados – Identificação do Período.80"
+  },
+  "C155": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “ C155 ”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "“C 155 ” Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código da conta analítica.",
+     "name": "COD_CTA_REC",
+     "num": 2,
+     "obrig": "- Sim -",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código do centro de custos.",
+     "name": "COD_CCUS_REC",
+     "num": 3,
+     "obrig": "- Não -",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "002",
+     "description": "Valor do saldo inicial do período.",
+     "name": "VL_SLD_INI_REC",
+     "num": 4,
+     "obrig": "- Sim -",
+     "tam": "019",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador da situação do saldo inicial: D – Devedor. C – Credor.",
+     "name": "IND_DC_INI_REC",
+     "num": 5,
+     "obrig": "[D;C] Sim -",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "002",
+     "description": "Valor total dos débitos no período.",
+     "name": "VL_DEB_REC",
+     "num": 6,
+     "obrig": "- Sim -",
+     "tam": "019",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "002",
+     "description": "Valor total dos créditos no período.",
+     "name": "VL_CRED_REC",
+     "num": 7,
+     "obrig": "- Sim -",
+     "tam": "019",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "002",
+     "description": "Valor do saldo final do período.",
+     "name": "VL_SLD_FIN_REC",
+     "num": 8,
+     "obrig": "- Sim -",
+     "tam": "019",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador da situação do saldo final do período.",
+     "name": "IND_DC_FIN_REC",
+     "num": 9,
+     "obrig": "[D;C] Sim -",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    }
+   ],
+   "level": null,
+   "occurrence": null,
+   "title": "Detalhe dos Saldos Periódicos Recuperados81"
+  },
+  "C600": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “ C600 ”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "“C 600 ” Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Data inicial das demonstrações contábeis.",
+     "name": "DT_INI",
+     "num": 2,
+     "obrig": "- Sim -",
+     "tam": "008",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Data final das demonstrações contábeis.",
+     "name": "DT_FIN",
+     "num": 3,
+     "obrig": "- Sim -",
+     "tam": "008",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Identificação das demonstrações: 1 – Demonstrações contábeis do empresário ou sociedade empresária a que se refere a escrituração. 2 – Demonstrações consolidadas ou de outras pessoas jurídicas.",
+     "name": "ID_DEM",
+     "num": 4,
+     "obrig": "[1;2] Sim -",
+     "tam": "001",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Cabeçalho das demonstrações",
+     "name": "CAB_DEM",
+     "num": 5,
+     "obrig": "- Não -",
+     "tam": "65535",
+     "type": "C",
+     "valid_values": []
+    }
+   ],
+   "level": null,
+   "occurrence": null,
+   "title": "Demonstrações Contábeis Recuperadas82"
+  },
+  "C650": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “ C650 ”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "“C 650 ” Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código de aglutinação da linha.",
+     "name": "COD_AGL",
+     "num": 2,
+     "obrig": "- Sim -",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Nível do código de aglutinação da linha.",
+     "name": "NIVEL_AGL",
+     "num": 3,
+     "obrig": "- Sim -",
+     "tam": "-",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Descrição do código de aglutinação da linha.",
+     "name": "DESCR_COD_AGL",
+     "num": 4,
+     "obrig": "- Sim -",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "002",
+     "description": "Valor do saldo final da linha.",
+     "name": "VL_CTA_FIN",
+     "num": 5,
+     "obrig": "- Sim -",
+     "tam": "019",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador da situação do saldo final da linha: D – Devedor. C – Credor.",
+     "name": "IND_DC_CTA_FIN",
+     "num": 6,
+     "obrig": "[D;C] Sim -",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    }
+   ],
+   "level": null,
+   "occurrence": null,
+   "title": "Demonstração do Resultado do Exercício Recuperado83"
+  },
+  "C990": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “ C 990”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "\" C 990\" Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Quantidade total de linhas do Bloco 0.",
+     "name": "QTD_LIN_0",
+     "num": 2,
+     "obrig": "- Sim [REGRA_QTD_LIN_ BLOCO_ C ]",
+     "tam": "-",
+     "type": "N",
+     "valid_values": []
+    }
+   ],
+   "level": null,
+   "occurrence": null,
+   "title": "Encerramento do Bloco C84"
+  },
+  "I001": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “I001”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "“I001” Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador de movimento: 0- Bloco com dados informados; 1- Bloco sem dados informados.",
+     "name": "IND_DAD",
+     "num": 2,
+     "obrig": "[0,1] Sim -",
+     "tam": "001",
+     "type": "N",
+     "valid_values": []
+    }
+   ],
+   "level": 1,
+   "occurrence": "Um por arquivo",
+   "title": "Abertura do Bloco I85"
+  },
+  "I010": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “I010”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "\"I010\" Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador da forma de escrituração contábil: G - Livro Diário (Completo sem escrituração auxiliar). R - Livro Diário com Escrituração Resumida (com escrituração auxiliar). A - Livro Diário Auxiliar ao Diário com Escrituração Resumida. B - Livro Balancetes Diários e Balanços. Z – Razão Auxiliar (Livro Contábil Auxiliar conforme leiaute definido nos registros I500 a I555).",
+     "name": "IND_ESC",
+     "num": 2,
+     "obrig": "[“G”,”R”, ”A”,”B”, ”Z”] Sim -",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código da Versão do Leiaute Contábil. (Preencher com 8 .00)",
+     "name": "COD_VER_LC",
+     "num": 3,
+     "obrig": "[ 8 .00] Sim [ REGRA_VERSAO_LC ]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    }
+   ],
+   "level": 2,
+   "occurrence": "Um por arquivo",
+   "title": "Identificação da Escrituração Contábil86"
+  },
+  "I012": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “I012”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "\"I012\" Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Número de ordem do instrumento associado.",
+     "name": "NUM_ORD",
+     "num": 2,
+     "obrig": "- Sim [REGRA_MAIOR_QUE_ZERO]",
+     "tam": "-",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Natureza do livro associado; finalidade a que se destina o instrumento.",
+     "name": "NAT_LIVR",
+     "num": 3,
+     "obrig": "- Sim -",
+     "tam": "80",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Tipo de escrituração do livro associado: 0 – digital (incluído no Sped). 1 – outros.",
+     "name": "TIPO",
+     "num": 4,
+     "obrig": "[0,1] Sim [REGRA_VALIDA_TIPO_LIVRO _AUXILIAR]",
+     "tam": "001",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código Hash do arquivo correspondente ao livro auxiliar utilizado na assinatura digital.",
+     "name": "COD_HASH_AUX",
+     "num": 5,
+     "obrig": "- Não [REGRA_CAMPO_COD_HASH_ AUX_OBRIGATORIO] [REGRA_VALIDA_ HEXADECIMAL]",
+     "tam": "40",
+     "type": "C",
+     "valid_values": []
+    }
+   ],
+   "level": 3,
+   "occurrence": ":",
+   "title": "Livros Auxiliares ao Diário ou Livro Principal88"
+  },
+  "I015": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “I015”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "\"I015\" Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código da(s) conta(s) analítica(s) do Livro Diário com Escrituração Resumida (R) que recebe os lançamentos globais (deve corresponder a uma conta sintética no livro auxiliar).",
+     "name": "COD_CTA_RES",
+     "num": 2,
+     "obrig": "- Sim [REGRA_VALIDA_CONTA_ RESUMID A _AUXILIAR] [REGRA_VALIDA_CONTA_ AUXILIAR_RESUMID A ]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    }
+   ],
+   "level": 4,
+   "occurrence": "Vários (por tipo de escrituração)",
+   "title": "Identificação das Contas da Escrituração Resumida a que se Refere a Escrituração Auxiliar91"
+  },
+  "I020": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “I020”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "\"I020\" Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código do registro que recepciona o campo adicional.",
+     "name": "REG_COD",
+     "num": 2,
+     "obrig": "[do “I050” ao “I355”] Sim [REGRA_REG_COD_NUM _AD_DUPLICADO]",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Número sequencial do campo adicional.",
+     "name": "NUM_AD",
+     "num": 3,
+     "obrig": "- Sim -",
+     "tam": "-",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Nome do campo adicional.",
+     "name": "CAMPO",
+     "num": 4,
+     "obrig": "- Sim -",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Descrição do campo adicional.",
+     "name": "DESCRIÇÃO",
+     "num": 5,
+     "obrig": "- Não -",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicação do tipo de dado (N: numérico; C: caractere). N: numérico - campos adicionais que conterão informações de valores em espécie (moeda), com duas decimais. C: caractere - campos adicionais que conterão outras informações que não sejam valores em espécie ( m oeda) , Exemplos: Códigos, CNPJ, CPF, etc..",
+     "name": "TIPO",
+     "num": 6,
+     "obrig": "[“N”,”C”] Sim -",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    }
+   ],
+   "level": 3,
+   "occurrence": "Vários por arquivo",
+   "title": "Campos Adicionais93"
+  },
+  "I030": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “I030”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "“I030” Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “TERMO DE ABERTURA”.",
+     "name": "DNRC_ABERT",
+     "num": 2,
+     "obrig": "“TERMO DE ABERTURA” Sim -",
+     "tam": "017",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Número de ordem do instrumento de escrituração.",
+     "name": "NUM_ORD",
+     "num": 3,
+     "obrig": "- Sim [REGRA_MAIOR_QUE_ ZERO]",
+     "tam": "-",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Natureza do livro; finalidade a que se destina o instrumento.",
+     "name": "NAT_LIVR",
+     "num": 4,
+     "obrig": "- Sim [REGRA_VALIDA_IDENT_ MF_LIVRO_RAS] [REGRA_VALIDA_CONTEU DO_NAT_LIVR]",
+     "tam": "80",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Quantidade total de linhas do arquivo digital.",
+     "name": "QTD_LIN",
+     "num": 5,
+     "obrig": " Sim [REGRA_IGUAL_QTD _LIN_REG9999]",
+     "tam": "-",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Nome empresarial.",
+     "name": "NOME",
+     "num": 6,
+     "obrig": "- Sim [REGRA_IGUAL_NOME_ REG0000]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Número de Identificação do Registro de Empresas da Junta Comercial.",
+     "name": "NIRE",
+     "num": 7,
+     "obrig": "- Não [ REGRA_VALIDA_NIRE ] [ REGRA_NIRE_UF ] [REGRA_CAMPO_ OBRIGATORIO_NIRE]",
+     "tam": "011",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Número de inscrição no CNPJ.",
+     "name": "CNPJ",
+     "num": 8,
+     "obrig": "- Sim [REGRA_IGUAL_CNPJ_ REG0000]",
+     "tam": "014",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Data do arquivamento dos atos constitutivos.",
+     "name": "DT_ARQ",
+     "num": 9,
+     "obrig": "- Não [REGRA_DATA_INI_ MAIOR_ADV]",
+     "tam": "008",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Data de arquivamento do ato de conversão de sociedade simples em sociedade empresária.",
+     "name": "DT_ARQ_CONV",
+     "num": 10,
+     "obrig": "- Não [REGRA_DATA_INI_ MAIOR] [REGRA_PREENCHE_ DATA_I030]",
+     "tam": "008",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Município.",
+     "name": "DESC_MUN",
+     "num": 11,
+     "obrig": "- Não -",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Data de encerramento do exercício social.",
+     "name": "DT_EX_SOCIAL",
+     "num": 12,
+     "obrig": "- Sim [REGRA_OBRIGATORIA_ DT_EX_SOCIAL]",
+     "tam": "008",
+     "type": "N",
+     "valid_values": []
+    }
+   ],
+   "level": 3,
+   "occurrence": "Um por arquivo",
+   "title": "Termo de Abertura do Livro97"
+  },
+  "I050": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “I050”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "\"I050\" Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Data da inclusão/alteração.",
+     "name": "DT_ALT",
+     "num": 2,
+     "obrig": "- Sim [REGRA_ANO_ALT_MAIOR_ ANO_FIN]",
+     "tam": "008",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código da natureza da conta/grupo de contas, conforme tabela publicada pelo Sped.",
+     "name": "COD_NAT",
+     "num": 3,
+     "obrig": " Sim [REGRA_TABELA_ NATUREZA]",
+     "tam": "002",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador do tipo de conta: S - Sintética (grupo de contas) A - Analítica (conta)",
+     "name": "IND_CTA",
+     "num": 4,
+     "obrig": "[“S”,”A”] Sim -",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Nível da conta analítica/grupo de contas.",
+     "name": "NIVEL",
+     "num": 5,
+     "obrig": "- Sim [REGRA_MAIOR_QUE _UM] [REGRA_VALIDA_NIVEL _CONTAS]",
+     "tam": "-",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código da conta analítica/grupo de contas.",
+     "name": "COD_CTA",
+     "num": 6,
+     "obrig": "- Sim [REGRA_COD_CTA_ IGUAL_COD_CTA_SUP ]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código da conta sintética /grupo de contas de nível imediatamente superior.",
+     "name": "COD_CTA_SUP",
+     "num": 7,
+     "obrig": "- Não [REGRA_COD_CTA _SUP_OBRIGATORIO] [REGRA_CTA_DE_NIVEL_ SUPERIOR_INVALIDA] [REGRA_CONTA_SUPERIOR_ NAO_SE_APLICA]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Nome da conta analítica/grupo de contas.",
+     "name": "CTA",
+     "num": 8,
+     "obrig": "- Sim -",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    }
+   ],
+   "level": 3,
+   "occurrence": "Vários por arquivo",
+   "title": "Plano de Contas101"
+  },
+  "I051": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “I051”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "“I051” Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    }
+   ],
+   "level": 4,
+   "occurrence": "Vários por plano de contas",
+   "title": "Plano de Contas Referencial106"
+  },
+  "I052": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “I052”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "“I052” Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código do centro de custo.",
+     "name": "COD_CCUS",
+     "num": 2,
+     "obrig": "- Não [REGRA_CCUS_NO_ CENTRO_CUSTOS_N3]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código de aglutinação utilizado nas demonstrações contábeis do bloco J (Somente para as contas analíticas).",
+     "name": "COD_AGL",
+     "num": 3,
+     "obrig": "- Sim -",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    }
+   ],
+   "level": 4,
+   "occurrence": "Vários por plano de contas",
+   "title": "Indicação dos Códigos de Aglutinação108"
+  },
+  "I075": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “I075”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "\"I075\" Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código do histórico padronizado.",
+     "name": "COD_HIST",
+     "num": 2,
+     "obrig": "- Sim [REGRA_REGISTRO_ DUPLICADO]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Descrição do histórico padronizado.",
+     "name": "DESCR_HIST",
+     "num": 3,
+     "obrig": "- Sim -",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    }
+   ],
+   "level": 3,
+   "occurrence": "vários (por arquivo)",
+   "title": "Tabela de Histórico Padronizado113"
+  },
+  "I100": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “I100”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "\"I100\" Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Data da inclusão/alteração.",
+     "name": "DT_ALT",
+     "num": 2,
+     "obrig": "- Sim [REGRA_DT_ALT_DATA_ MAIOR]",
+     "tam": "008",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código do centro de custos.",
+     "name": "COD_CCUS",
+     "num": 3,
+     "obrig": "- Sim -",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Nome do centro de custos.",
+     "name": "CCUS",
+     "num": 4,
+     "obrig": "- Sim -",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    }
+   ],
+   "level": 3,
+   "occurrence": "Vários por tipo de escrituração",
+   "title": "Centro de Custos114"
+  },
+  "I150": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “I150”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "\"I150\" Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Data de início do período.",
+     "name": "DT_INI",
+     "num": 2,
+     "obrig": "- Sim [REGRA_DATA_INTERVALO_ DO_ARQUIVO] [REGRA_DT_INI_MAIOR_ DT_FIN] [REGRA_DT_INI_INICIO_MES]",
+     "tam": "008",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Data de fim do período.",
+     "name": "DT_FIN",
+     "num": 3,
+     "obrig": "- Sim [REGRA_DATA_INTERVALO_ DO_ARQUIVO] [REGRA_DT_FIN_FIM_MES]",
+     "tam": "008",
+     "type": "N",
+     "valid_values": []
+    }
+   ],
+   "level": 3,
+   "occurrence": "Vários por tipo de escrituração",
+   "title": "Saldos Periódicos – Identificação do Período115"
+  },
+  "I155": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “I155”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "\"I155\" Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código da conta analítica.",
+     "name": "COD_CTA",
+     "num": 2,
+     "obrig": "- Sim [REGRA_CONTA_PARA_ LANCAMENTO]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código do centro de custos.",
+     "name": "COD_CCUS",
+     "num": 3,
+     "obrig": "- Não [REGRA_CCUS_NO_ CENTRO_CUSTOS]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "02",
+     "description": "Valor do saldo inicial do período.",
+     "name": "VL_SLD_INI",
+     "num": 4,
+     "obrig": "- Sim -",
+     "tam": "019",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador da situação do saldo inicial: D - Devedor; C - Credor.",
+     "name": "IND_DC_INI",
+     "num": 5,
+     "obrig": "[“D”,”C”] Não [REGRA_IND_DC_ INI_OBRIGATORIO]",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "02",
+     "description": "Valor total dos débitos do período.",
+     "name": "VL_DEB",
+     "num": 6,
+     "obrig": "- Sim -",
+     "tam": "019",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "02",
+     "description": "Valor total dos créditos do período.",
+     "name": "VL_CRED",
+     "num": 7,
+     "obrig": "- Sim -",
+     "tam": "019",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "02",
+     "description": "Valor do saldo final do período.",
+     "name": "VL_SLD_FIN",
+     "num": 8,
+     "obrig": "- Sim -",
+     "tam": "019",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador da situação do saldo final: D - Devedor; C - Credor.",
+     "name": "IND_DC_FIN",
+     "num": 9,
+     "obrig": "[“D”,”C”] Não [REGRA_IND_DC_ FIN_OBRIGATORIO]",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    }
+   ],
+   "level": 4,
+   "occurrence": "Vários por tipo de escrituração",
+   "title": "Detalhe dos Saldos Periódicos117"
+  },
+  "I157": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “I157”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "\"I157\" Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código da conta analítica do plano de contas anterior.",
+     "name": "COD_CTA",
+     "num": 2,
+     "obrig": "- Sim ",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código do centro de custos do plano de contas anterior.",
+     "name": "COD_CCUS",
+     "num": 3,
+     "obrig": "- Não ",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "02",
+     "description": "Valor do saldo inicial do período.",
+     "name": "VL_SLD_INI",
+     "num": 4,
+     "obrig": "- Sim -",
+     "tam": "019",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador da situação do saldo inicial: D - Devedor; C - Credor.",
+     "name": "IND_DC_INI",
+     "num": 5,
+     "obrig": "[“D”,”C”] Não [REGRA_IND_DC_ INI_OBRIGATORIO]",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    }
+   ],
+   "level": 5,
+   "occurrence": "Vários por tipo de escrituração",
+   "title": "Transferência de Saldos de Plano de Contas Anterior124"
+  },
+  "I200": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “I200”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "“I200” Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Número ou Código de identificação único do lançamento contábil.",
+     "name": "NUM_LCTO",
+     "num": 2,
+     "obrig": "- Sim [REGRA_REGISTRO_ DUPLICADO]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Data do lançamento.",
+     "name": "DT_LCTO",
+     "num": 3,
+     "obrig": "- Sim [REGRA_DATA_INTERVALO_ DO_ARQUIVO] [REGRA_DATA_ANTIGA]",
+     "tam": "008",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "02",
+     "description": "Valor do lançamento.",
+     "name": "VL_LCTO",
+     "num": 4,
+     "obrig": "- Sim [REGRA_VALIDACAO_VL_ LCTO_DEB] [REGRA_VALIDACAO_VL_ LCTO_CRED] [REGRA_VALIDACAO_VL_ LCTO_ESC_AUXILIAR]",
+     "tam": "019",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador do tipo de lançamento: N - Lançamento normal (todos os lançamentos, exceto os de encerramento das contas de resultado); E - Lançamento de encerramento de contas de resultado. X – Lançamento extemporâneo.",
+     "name": "IND_LCTO",
+     "num": 5,
+     "obrig": "[“N”, “E”] Sim -",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Data de ocorrência dos fatos objeto do lançamento extemporâneo . Observação: Caso não seja possível precisar a data a que se refira m o s fatos do lançamento extemporâneo , informar a data d e encerramento do exercício em que ocorreram esses fatos .",
+     "name": "DT_LCTO_EXT",
+     "num": 6,
+     "obrig": "- Não [REGRA_DT_LCTO_EXT_ OBRIGATORIA] [REGRA_DT_LCTO_EXT_ INDEVIDA] [REGRA_DT_ANTIGA] [ REGRA_DT_LCTO_EXT_INV ]",
+     "tam": "008",
+     "type": "N",
+     "valid_values": []
+    }
+   ],
+   "level": 3,
+   "occurrence": "Vários por tipo de escrituração",
+   "title": "Lançamento Contábil126"
+  },
+  "I250": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “I250”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "“I250” Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código da conta analítica debitada/creditada.",
+     "name": "COD_CTA",
+     "num": 2,
+     "obrig": "- Sim [REGRA_CONTA_PARA_ LANCAMENTO] [REGRA_LANC_EXT_ CONTA_RESULTADO]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código do centro de custos.",
+     "name": "COD_CCUS",
+     "num": 3,
+     "obrig": "- Não [REGRA_CCUS_NO_ CENTRO_CUSTOS]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "02",
+     "description": "Valor da partida.",
+     "name": "VL_DC",
+     "num": 4,
+     "obrig": "- Sim -",
+     "tam": "019",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador da natureza da partida: D - Débito; C - Crédito.",
+     "name": "IND_DC",
+     "num": 5,
+     "obrig": "[“D”,”C”] Sim -",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Número, Código ou caminho de localização dos documentos arquivados.",
+     "name": "NUM_ARQ",
+     "num": 6,
+     "obrig": "- Não -",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código do histórico padronizado, conforme tabela I075.",
+     "name": "COD_HIST_PAD",
+     "num": 7,
+     "obrig": "- Não [REGRA_COD_HIS_PAD_ NO_HISTORICO_PADRAO]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Histórico completo da partida ou histórico complementar. Observação: Caso o lançamento seja do tipo “X” – lançamento extemporâneo - em qualquer das formas de retificação, o histórico do lançamento extemporâneo deve especificar o motivo da correção, a data e o número do lançamento de origem (item 32 do ITG 2000 (R1)).",
+     "name": "HIST",
+     "num": 8,
+     "obrig": "- Não -",
+     "tam": "65535",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código de identificação do participante na partida conforme tabela 0150 (preencher somente quando identificado o tipo de participação no registro 0180).",
+     "name": "COD_PART",
+     "num": 9,
+     "obrig": "- Não [REGRA_CODIGO_ PARTICIPANTE]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    }
+   ],
+   "level": 4,
+   "occurrence": "Vários por tipo de escrituração",
+   "title": "Partidas do Lançamento131"
+  },
+  "I300": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “I300”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "\"I300\" Sim -",
+     "tam": "4",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Data do balancete.",
+     "name": "DT_BCTE",
+     "num": 2,
+     "obrig": "- Sim [REGRA_DATA_INTERVALO_ DO_ARQUIVO]",
+     "tam": "8",
+     "type": "N",
+     "valid_values": []
+    }
+   ],
+   "level": 3,
+   "occurrence": "Vários por tipo de escrituração",
+   "title": "Balancetes Diários – Identificação da Data136"
+  },
+  "I310": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “I310”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "\"I310\" Sim -",
+     "tam": "4",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código da conta analítica debitada/creditada.",
+     "name": "COD_CTA",
+     "num": 2,
+     "obrig": "- Sim [REGRA_CONTA_PARA_ LANCAMENTO]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código do centro de custos.",
+     "name": "COD_CCUS",
+     "num": 3,
+     "obrig": "- Não [REGRA_CCUS_NO_ CENTRO_CUSTOS]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "02",
+     "description": "Total dos débitos do dia.",
+     "name": "VAL_DEBD",
+     "num": 4,
+     "obrig": "- Sim -",
+     "tam": "019",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "02",
+     "description": "Total dos créditos do dia.",
+     "name": "VAL_CREDD",
+     "num": 5,
+     "obrig": "- Sim -",
+     "tam": "019",
+     "type": "N",
+     "valid_values": []
+    }
+   ],
+   "level": 4,
+   "occurrence": "Vários por tipo de escrituração",
+   "title": "Detalhes do Balancete Diário137"
+  },
+  "I350": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “I350”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "\"I350\" Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Data da apuração do resultado.",
+     "name": "DT_RES",
+     "num": 2,
+     "obrig": "- Sim [REGRA_DATA_ INTERVALO_DO_ARQUIVO]",
+     "tam": "008",
+     "type": "N",
+     "valid_values": []
+    }
+   ],
+   "level": 3,
+   "occurrence": "Vários por tipo de escrituração",
+   "title": "Saldo das Contas de Resultado Antes do Encerramento – Identificação da Data139"
+  },
+  "I355": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “I355”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "\"I355\" Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código da conta analítica de resultado.",
+     "name": "COD_CTA",
+     "num": 2,
+     "obrig": "- Sim [REGRA_CONTA_ RESULTADO] [REGRA_CONTA_PARA_ LANCAMENTO]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código do centro de custos.",
+     "name": "COD_CCUS",
+     "num": 3,
+     "obrig": "- Não [REGRA_CCUS_NO_ CENTRO_CUSTOS]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "02",
+     "description": "Valor do saldo final antes do lançamento de encerramento.",
+     "name": "VL_CTA",
+     "num": 4,
+     "obrig": "- Sim -",
+     "tam": "019",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador da situação do saldo final: D - Devedor; C - Credor.",
+     "name": "IND_DC",
+     "num": 5,
+     "obrig": "[“D”,”C”] Sim -",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    }
+   ],
+   "level": 4,
+   "occurrence": "Vários por tipo de escrituração",
+   "title": "Detalhes dos Saldos das Contas de Resultado Antes do Encerramento141"
+  },
+  "I500": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “I500”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "\"I500\" Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Tamanho da fonte.",
+     "name": "TAM_FONTE",
+     "num": 2,
+     "obrig": "- Sim [ REGRA_TAM_FONTE ]",
+     "tam": "002",
+     "type": "N",
+     "valid_values": []
+    }
+   ],
+   "level": 3,
+   "occurrence": "Um por arquivo",
+   "title": "Parâmetros de Impressão e Visualização do Razão Auxiliar com Leiaute Parametrizável144"
+  },
+  "I510": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “I510”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "\"I510\" Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Nome do campo, sem espaços em branco ou caractere especial.",
+     "name": "NM_CAMPO",
+     "num": 2,
+     "obrig": "- Sim -",
+     "tam": "016",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Descrição do campo (utilizada na visualização do Livro Auxiliar)",
+     "name": "DESC_CAMPO",
+     "num": 3,
+     "obrig": "- Sim -",
+     "tam": "050",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Tipo do campo: “N” – Numérico; “C” – Caractere.",
+     "name": "TIPO_CAMPO",
+     "num": 4,
+     "obrig": "[N, C] Sim -",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Tamanho do campo.",
+     "name": "TAM_CAMPO",
+     "num": 5,
+     "obrig": "- Sim -",
+     "tam": "003",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Quantidade de casas decimais para campos tipo “N”.",
+     "name": "DEC_CAMPO",
+     "num": 6,
+     "obrig": "- Não -",
+     "tam": "002",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Largura da coluna no relatório (em quantidade de caracteres).",
+     "name": "COL_CAMPO",
+     "num": 7,
+     "obrig": "- Sim ",
+     "tam": "003",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Conjunto de caracteres utilizado para individualizar o bem, conforme sua natureza. Exemplos: Placa para veículos automotores, matrícula do cartório para imóveis, marca/modelo para equipamentos, raça/idade/sexo para animais vivos, série do derivativo em bolsa, etc.",
+     "name": "IDENT_ITEM",
+     "num": 8,
+     "obrig": "",
+     "tam": "030",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Descrição resumida do item. Observação: No caso de AVJ reflexo, será a descrição do item pertencente ao patrimônio da investida.",
+     "name": "DESCR_ITEM",
+     "num": 9,
+     "obrig": "",
+     "tam": "050",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Data do reconhecimento contábil do item (ddmmaaaa). É a data em que ocorreu o registro inicial no sistema contábil, mesmo que anterior ao exercício corrente. Em situações justificáveis pela complexidade na identificação da informação, poderá ser informado um registro aproximado constando 31/12 do ano. Exemplo: 31122004 (31/12/2004).",
+     "name": "DATA_RECT_INI",
+     "num": 10,
+     "obrig": "",
+     "tam": "008",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "002",
+     "description": "Saldo inicial da conta contábil que registra o item (ativo/passivo) ao qual a subconta esteja vinculada. O saldo a ser informado corresponde ao saldo antes de ocorrer o evento originário do lançamento na subconta demonstrado no livro razão auxiliar. Observação: No caso de AVJ reflexo, será o saldo inicial da subconta AVJ na investida.",
+     "name": "SLD_ITEM_INI",
+     "num": 11,
+     "obrig": "",
+     "tam": "019",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador do saldo inicial da conta contábil: D – Devedor C – Credor",
+     "name": "IND_SLD_ITEM_INI",
+     "num": 12,
+     "obrig": "",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "002",
+     "description": "Parcela da realização do item registrado no patrimônio da investida/emitente ao qual a subconta esteja vinculada. Exemplo: Depreciação, alienação, integralizar capital de outra pessoa jurídica.",
+     "name": "REAL_ITEM",
+     "num": 13,
+     "obrig": "",
+     "tam": "019",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador da realização do item: D – Devedor C – Credor",
+     "name": "IND_REAL_ITEM",
+     "num": 14,
+     "obrig": "",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "002",
+     "description": "Saldo final da conta contábil que registra a conta (ativo/passivo) ao qual a subconta esteja vinculada. Corresponde ao saldo após ocorrer o evento originário do lançamento na subconta demonstrado no livro razão auxiliar, como por exemplo a baixa do bem, quando seu valor será zerado. Observação: No caso de AVJ reflexo, será o saldo inicial da subconta AVJ na investida.",
+     "name": "SLD_ITEM_FIN",
+     "num": 15,
+     "obrig": "",
+     "tam": "019",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador do saldo final da conta contábil: D – Devedor C – Credor",
+     "name": "IND_SLD_ITEM_FIN",
+     "num": 16,
+     "obrig": "",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "002",
+     "description": "Saldo inicial representativo do item na subconta antes do lançamento a ser demonstrado neste registro. Este valor pode não coincidir com o saldo apresentado na ECD para este instante, uma vez que demonstra apenas a parcela atribuível a este item.",
+     "name": "SLD_SCNT_INI",
+     "num": 17,
+     "obrig": "",
+     "tam": "019",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador do saldo inicial da subconta: D – Devedor C – Credor",
+     "name": "IND_SLD_SCNT_INI",
+     "num": 18,
+     "obrig": "",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "002",
+     "description": "Valor registrado a débito na subconta correspondente apenas a participação do item na composição de um lançamento resumido na ECD, que pode englobar vários eventos sobre itens distintos.",
+     "name": "DEB_SCNT",
+     "num": 19,
+     "obrig": "",
+     "tam": "019",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "002",
+     "description": "Valor registrado a crédito na subconta correspondente apenas a participação do item na composição de um lançamento resumido na ECD, que pode englobar vários eventos sobre itens distintos.",
+     "name": "CRED_SCNT",
+     "num": 20,
+     "obrig": "",
+     "tam": "019",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "002",
+     "description": "Saldo final representativo deste item na subconta após o lançamento demonstrado neste registro. Este valor pode não coincidir com o saldo apresentado na ECD para este instante, uma vez que demonstra apenas a parcela atribuível a este item.",
+     "name": "SLD_SCNT_FIN",
+     "num": 21,
+     "obrig": "",
+     "tam": "019",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador do saldo final da subconta: D – Devedor C – Credor",
+     "name": "IND_SLD_SCNT_FIN",
+     "num": 22,
+     "obrig": "",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Data do lançamento contábil consolidado na subconta. Equivale ao campo 3 do registro I200 (I200.DT_LCTO) correspondente a subconta.",
+     "name": "DATA_LCTO",
+     "num": 23,
+     "obrig": "",
+     "tam": "008",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Número de identificação único do lançamento contábil consolidado na subconta. Equivale ao campo 2 do registro I200 (I200.NUM_LCTO) correspondente a subconta.",
+     "name": "NR_LCTO",
+     "num": 24,
+     "obrig": "",
+     "tam": "020",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "002",
+     "description": "Valor do lançamento contábil consolidado na subconta. Representa o campo 4 do registro I250 (I250.VL_DC) correspondente a subconta. Exemplo: Perda relativa a AVJ de um bem, baixa da subconta por alienação de outro, ganho relativo a AVJ em outro bem, etc.",
+     "name": "VLR_LCTO",
+     "num": 25,
+     "obrig": "",
+     "tam": "019",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador do lançamento: D – Débito C – Crédito",
+     "name": "IND_VLR_LCTO",
+     "num": 26,
+     "obrig": "",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador de registro relativo à adoção inicial. 1 – Sim 2 – Não",
+     "name": "IND_ADOC_INI",
+     "num": 27,
+     "obrig": "",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    }
+   ],
+   "level": 3,
+   "occurrence": "Vários por arquivo",
+   "title": "Definição de Campos do Livro Razão Auxiliar com Leiaute Parametrizável145"
+  },
+  "I550": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “I550”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "\"I550\" Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    }
+   ],
+   "level": 3,
+   "occurrence": "Vários por arquivo",
+   "title": "Detalhes do Livro Razão Auxiliar com Leiaute Parametrizável147"
+  },
+  "I555": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “I555”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "\"I555\" Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    }
+   ],
+   "level": 4,
+   "occurrence": "Vários por arquivo",
+   "title": "Totais no Livro Razão Auxiliar com Leiaute Parametrizável150"
+  },
+  "I990": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “I990”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "\"I990\" Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Quantidade total de linhas do Bloco I.",
+     "name": "QTD_LIN_I",
+     "num": 2,
+     "obrig": "- Sim [ REGRA_QTD_LIN_BLOCO I]",
+     "tam": "-",
+     "type": "N",
+     "valid_values": []
+    }
+   ],
+   "level": 1,
+   "occurrence": "Um por arquivo",
+   "title": "Encerramento do Bloco I152"
+  },
+  "J001": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “J001”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "“J001” Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador de movimento: 0- Bloco com dados informados; 1- Bloco sem dados informados.",
+     "name": "IND_DAD",
+     "num": 2,
+     "obrig": "[0,1] Sim -",
+     "tam": "001",
+     "type": "N",
+     "valid_values": []
+    }
+   ],
+   "level": 1,
+   "occurrence": "Um por arquivo",
+   "title": "Abertura do Bloco J153"
+  },
+  "J005": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “J005”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "“J005” Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Data inicial das demonstrações contábeis. Observação: A data inicial das demonstrações deve ser a data posterior ao último encerramento do exercício, mesmo que essa data não esteja no período da ECD transmitida. Exemplo: Data do Último Encerramento do Exercício: 31/12/2020 Data Inicial das Demonstrações Contábeis: 01/01/2021",
+     "name": "DT_INI",
+     "num": 2,
+     "obrig": "- Sim [REGRA_DATA_INI_ MAIOR] [REGRA_DT_INI_MAIOR_ DT_FIN] [REGRA_DATA_ANTIGA]",
+     "tam": "008",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Data final das demonstrações contábeis.",
+     "name": "DT_FIN",
+     "num": 3,
+     "obrig": "- Sim [REGRA_DATA_INI_ MAIOR] [REGRA_DATA_ANTIGA]",
+     "tam": "008",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Identificação das demonstrações: 1 – demonstrações contábeis da pessoa jurídica a que se refere a escrituração; 2 – demonstrações consolidadas ou de outras pessoas jurídicas.",
+     "name": "ID_DEM",
+     "num": 4,
+     "obrig": "[1,2] Sim ",
+     "tam": "001",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Cabeçalho das demonstrações.",
+     "name": "CAB_DEM",
+     "num": 5,
+     "obrig": "- Não [REGRA_CAB_DEM_ OBRIGATORIO]",
+     "tam": "65535",
+     "type": "C",
+     "valid_values": []
+    }
+   ],
+   "level": 2,
+   "occurrence": "Vários por arquivo",
+   "title": "Demonstrações Contábeis154"
+  },
+  "J100": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “J100”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "“J100” Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código de aglutinação atribuído pela pessoa jurídica. Observação: Caso o indicador de código de aglutinação seja totalizador (T), o código de aglutinação deve ser informado, mas não deve estar cadastrado no registro I052 – os códigos de aglutinação informados no registro I052 são somente para contas analíticas.",
+     "name": "COD_AGL",
+     "num": 2,
+     "obrig": "- Sim [ REGRA_COD_AGL_ IGUAL_COD_AGL_ SUPERIOR ]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador do tipo de código de aglutinação das linhas: T – Totalizador (nível que totaliza um ou mais níveis inferiores da demonstração financeira) D – Detalhe ( nível mais detalhado da demonstração financeira)",
+     "name": "IND_COD_AGL",
+     "num": 3,
+     "obrig": "[“T”,“D”] Sim -",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código de aglutinação sintético/grupo de código de aglutinação de nível superior.",
+     "name": "COD_AGL_SUP",
+     "num": 5,
+     "obrig": "- Não [REGRA_COD_AGL_ SUP_OBRIGATORIO] [REGRA_COD_AGL_DE _NIVEL_SUPERIOR_ INVALIDO] [REGRA_COD_AGL_NAO _SE_APLICA]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "2",
+     "description": "Valor inicial do código de aglutinação no Balanço Patrimonial no exercício informado, ou de período definido em norma específica.",
+     "name": "VL_CTA_INI",
+     "num": 8,
+     "obrig": "- Sim -",
+     "tam": "019",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador da situação do saldo inicial informado no campo anterior: D - Devedor; C – Credor.",
+     "name": "IND_DC_CTA_INI",
+     "num": 9,
+     "obrig": "[“D”,”C”] Sim -",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "2",
+     "description": "Valor final do código de aglutinação no Balanço Patrimonial no exercício informado, ou de período definido em norma específica.",
+     "name": "VL_CTA_FIN",
+     "num": 10,
+     "obrig": "- Sim -",
+     "tam": "019",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador da situação do saldo final informado no campo anterior: D - Devedor; C – Credor.",
+     "name": "IND_DC_CTA_FIN",
+     "num": 11,
+     "obrig": "[“D”,”C”] Sim -",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    }
+   ],
+   "level": 3,
+   "occurrence": "Vários por arquivo",
+   "title": "Balanço Patrimonial157"
+  },
+  "J150": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “J150”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "“J150” Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Número de ordem da linha na visualização da demonstração.",
+     "name": "NU_ORDEM",
+     "num": 2,
+     "obrig": "- Sim -",
+     "tam": "019",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código de aglutinação das linhas, atribuído pela pessoa jurídica. Observação: Caso o indicador de código de aglutinação seja totalizador (T), o código de aglutinação deve ser informado, mas não deve estar cadastrado no registro I052 – os códigos de aglutinação informados no registro I052 são somente para contas analíticas.",
+     "name": "COD_AGL",
+     "num": 3,
+     "obrig": "- Não [REGRA_COD_AGL_ IGUAL_COD_AGL_ SUPERIOR]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador do tipo de código de aglutinação das linhas: T – Totalizador (nível que totaliza um ou mais níveis inferiores da demonstração financeira) D – Detalhe (nível mais detalhado da demonstração financeira)",
+     "name": "IND_COD_AGL",
+     "num": 4,
+     "obrig": "[“T”,“D”] Sim -",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Nível do Código de aglutinação (mesmo conceito do plano de contas – Registro I050).",
+     "name": "NIVEL_AGL",
+     "num": 5,
+     "obrig": "- Sim [REGRA_MAIOR_QUE _ZERO] [REGRA_VALIDA_ NIVEL_AGL]",
+     "tam": "-",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código de aglutinação sintético/grupo de código de aglutinação de nível superior.",
+     "name": "COD_AGL_SUP",
+     "num": 6,
+     "obrig": "- Não [REGRA_COD_AGL_ SUP_OBRIGATORIO] [REGRA_COD_AGL_DE _NIVEL_SUPERIOR_ INVALIDO] [REGRA_COD_AGL_NAO _SE_APLICA]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Descrição do Código de aglutinação.",
+     "name": "DESCR_COD_AGL",
+     "num": 7,
+     "obrig": "- Sim -",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "02",
+     "description": "Valor do saldo final da linha no período imediatamente anterior.",
+     "name": "VL_CTA_INI_",
+     "num": 8,
+     "obrig": "- Não -",
+     "tam": "019",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador da situação do valor final da linha no período i mediatamente anterior: D – Devedor; C – Credor.",
+     "name": "IND_DC_CTA_INI",
+     "num": 9,
+     "obrig": "[“D”,“C”] Não -",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "02",
+     "description": "Valor final da linha antes do encerramento do exercício.",
+     "name": "VL_CTA_FIN",
+     "num": 10,
+     "obrig": "- Sim -",
+     "tam": "019",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador da situação do valor final da linha antes do encerramento do exercício: D – Devedor; C – Credor.",
+     "name": "IND_DC_CTA_FIN",
+     "num": 11,
+     "obrig": "[“D”,“C”] Sim -",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador de grupo da DRE: D – Linha totalizadora ou de detalhe da demonstração que, por sua natureza de despesa, represente redução do lucro. R – Linha totalizadora ou de detalhe da demonstração que, por sua natureza de receita, represente incremento do lucro.",
+     "name": "IND_GRP_DRE",
+     "num": 12,
+     "obrig": "[“D”,”R”] Sim -",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Referência a numeração das notas explicativas relativas às demonstrações contábeis.",
+     "name": "NOTA_EXP_REF",
+     "num": 13,
+     "obrig": "- Não -",
+     "tam": "12",
+     "type": "C",
+     "valid_values": []
+    }
+   ],
+   "level": 3,
+   "occurrence": "Vários por arquivo",
+   "title": "Demonstração do Resultado do Exercício (DRE)163"
+  },
+  "J210": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “J210”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "“J210” Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "0",
+     "description": "Indicador do tipo de demonstração: 0 – DLPA – Demonstração de Lucro ou Prejuízos Acumulados 1 – DMPL – Demonstração de Mutações do Patrimônio Líquido",
+     "name": "IND_TIP",
+     "num": 2,
+     "obrig": "[0,1] Sim -",
+     "tam": "001",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código de aglutinação das contas analíticas do patrimônio líquido, atribuído pela empresa.",
+     "name": "COD_AGL",
+     "num": 3,
+     "obrig": "- Sim [REGRA_EXISTE_ AGLUTINACAO_ J210]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Descrição do código de aglutinação",
+     "name": "DESCR_COD_AGL",
+     "num": 4,
+     "obrig": "- Sim -",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "02",
+     "description": "Saldo inicial do código de aglutinação na demonstração do período informado.",
+     "name": "VL_CTA_INI",
+     "num": 5,
+     "obrig": "- Sim -",
+     "tam": "019",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador da situação do saldo inicial informado no campo anterior: D – Devedor C – Credor",
+     "name": "IND_DC_CTA_INI",
+     "num": 6,
+     "obrig": "[“D”,”C”] Sim -",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "02",
+     "description": "Saldo final do código de aglutinação na demonstração do período informado.",
+     "name": "VL_CTA_FIN",
+     "num": 7,
+     "obrig": "- Sim [REGRA_VALIDA_ TOTAL_COD_ AGLUTINACAO_ J215]",
+     "tam": "019",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador da situação do saldo final informado no campo anterior: D – Devedor C – Credor",
+     "name": "IND_DC_CTA_FIN",
+     "num": 8,
+     "obrig": "[“D”,”C”] Sim -",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Referência à numeração das notas explicativas relativas às demonstrações contábeis.",
+     "name": "NOTAS_EXP_REF",
+     "num": 9,
+     "obrig": "- Não -",
+     "tam": "12",
+     "type": "C",
+     "valid_values": []
+    }
+   ],
+   "level": 3,
+   "occurrence": "Vários por arquivo",
+   "title": "DLPA – Demonstração de Lucros ou Prejuízos Acumulados/DMPL – Demonstração de Mutações do Patrimônio Líquido169"
+  },
+  "J215": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “J215”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "“J215” Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código do histórico do fato contábil.",
+     "name": "COD_HIST_FAT",
+     "num": 2,
+     "obrig": "- Sim -",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Descrição do Fato Contábil",
+     "name": "DESC_FAT",
+     "num": 3,
+     "obrig": "- Sim -",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    }
+   ],
+   "level": 4,
+   "occurrence": "Vários por arquivo",
+   "title": "Fato Contábil que Altera a Conta Lucros Acumulados ou a Conta Prejuízos Acumulados ou Todo o Patrimônio Líquido172"
+  },
+  "J800": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “J800”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "\"J800\" Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Tipo de documento: 001: Demonstração do Resultado Abrangente do Período 002: Demonstração dos Fluxos de Caixa 003: Demonstração do Valor Adicionado 010: Notas Explicativas 011: Relatório da Administração 012: Parecer dos Auditores 099: Outros",
+     "name": "TIPO_DOC",
+     "num": 2,
+     "obrig": "- Sim -",
+     "tam": "003",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Descrição do arquivo .rtf.",
+     "name": "DESC_RTF",
+     "num": 3,
+     "obrig": "- Não -",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Hash do arquivo .rtf incluído. Observação: O HASH é preenchido automaticamente pelo sistema (não é editável e não pode ser alterado).",
+     "name": "HASH_RTF",
+     "num": 4,
+     "obrig": "- Não [REGRA_VALIDA_ HASH_ARQUIVO]",
+     "tam": "041",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador de fim do arquivo RTF. Texto fixo contendo “J800FIM”.",
+     "name": "IND_FIM_RTF",
+     "num": 6,
+     "obrig": "\"J800FIM\" Sim -",
+     "tam": "007",
+     "type": "C",
+     "valid_values": []
+    }
+   ],
+   "level": 3,
+   "occurrence": "Vários por arquivo",
+   "title": "Outras Informações173"
+  },
+  "J801": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “J801”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "\"J801\" Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Tipo de documento: 001: Termo de Verificação para Fins Substituição da ECD",
+     "name": "TIPO_DOC",
+     "num": 2,
+     "obrig": "- Sim -",
+     "tam": "003",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Descrição do arquivo .rtf.",
+     "name": "DESC_RTF",
+     "num": 3,
+     "obrig": "- Não -",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    }
+   ],
+   "level": 3,
+   "occurrence": "Um por arquivo, se for o arquivo de uma ECD substituta",
+   "title": "Termo de Verificação para Fins de Substituição da ECD175"
+  },
+  "J900": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “J900”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "“J900” Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “TERMO DE ENCERRAMENTO”.",
+     "name": "DNRC_ENCER",
+     "num": 2,
+     "obrig": "“TERMO DE ENCERRAMENTO” Sim -",
+     "tam": "021",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Número de ordem do instrumento de escrituração.",
+     "name": "NUM_ORD",
+     "num": 3,
+     "obrig": "- Sim [REGRA_IGUAL_ NUM_ORD_ REGI030]",
+     "tam": "-",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Natureza do livro; finalidade a que se destinou o instrumento.",
+     "name": "NAT_LIVRO",
+     "num": 4,
+     "obrig": "- Sim [REGRA_VALIDA _CONTEUDO_ NAT_LIVR]",
+     "tam": "80",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Quantidade total de linhas do arquivo digital.",
+     "name": "QTD_LIN",
+     "num": 6,
+     "obrig": "- Sim [REGRA_IGUAL_ QTD_LIN_ REG9999]",
+     "tam": "-",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Data de início da escrituração.",
+     "name": "DT_INI_ESCR",
+     "num": 7,
+     "obrig": "- Sim [REGRA_IGUAL_ DT_INI_REG0000]",
+     "tam": "008",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Data de término da escrituração.",
+     "name": "DT_FIN_ESCR",
+     "num": 8,
+     "obrig": "- Sim [REGRA_IGUAL_ DT_FIN_REG0000]",
+     "tam": "008",
+     "type": "N",
+     "valid_values": []
+    }
+   ],
+   "level": 2,
+   "occurrence": "Um por arquivo",
+   "title": "Termo de Encerramento178"
+  },
+  "J930": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “J930”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "[“J930”] Sim ",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Nome do signatário.",
+     "name": "IDENT_NOM",
+     "num": 2,
+     "obrig": "- Sim ",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Qualificação do assinante, conforme tabela.",
+     "name": "IDENT_QUALIF",
+     "num": 4,
+     "obrig": "- Sim [REGRA_TABELA_ ASSINANTE_DESC]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código de qualificação do assinante, conforme tabela.",
+     "name": "COD_ASSIN",
+     "num": 5,
+     "obrig": "- Sim [REGRA_QUALIF_INV_RESP _LEGAL]",
+     "tam": "003",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Número de inscrição do contabilista no Conselho Regional de Contabilidade.",
+     "name": "IND_CRC",
+     "num": 6,
+     "obrig": "- Não [REGRA_OBRIGATORIO_ CONTADOR]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Email do signatário.",
+     "name": "EMAIL",
+     "num": 7,
+     "obrig": "- Não [REGRA_OBRIGATORIO_ CONTADOR]",
+     "tam": "060",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Telefone do signatário.",
+     "name": "FONE",
+     "num": 8,
+     "obrig": "- Não [REGRA_OBRIGATORIO_ CONTADOR]",
+     "tam": "014",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicação da unidade da federação que expediu o CRC.",
+     "name": "UF_CRC",
+     "num": 9,
+     "obrig": "- Não [REGRA_TABELA_UF] [REGRA_OBRIGATORIO_ CONTADOR] [REGRA_AVISO_ASSIN_CNPJ]",
+     "tam": "002",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Número da Certidão de Regularidade Profissional do Contador no seguinte formato: UF/ano/número",
+     "name": "NUM_SEQ_CRC",
+     "num": 10,
+     "obrig": "- Não [REGRA_VALIDA_FORMATO _SEQUENCIAL_CRC] [REGRA_ADVERTENCIA_ CONTADOR] [REGRA_AVISO_ASSIN_CNPJ]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Data de validade da Certidão de Regularidade Profissional do Contador",
+     "name": "DT_CRC",
+     "num": 11,
+     "obrig": "- Não [REGRA_ADVERTENCIA_ CONTADOR] [REGRA_AVISO_ASSIN_CNPJ]",
+     "tam": "008",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Identificação do signatário que será validado como responsável pela assinatura da ECD, conforme atos societários: S – Sim N – Não",
+     "name": "IND_RESP_LEGAL",
+     "num": 12,
+     "obrig": "[S; N] Sim ",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    }
+   ],
+   "level": 3,
+   "occurrence": "Vários por arquivo",
+   "title": "Signatários da Escrituração180"
+  },
+  "J932": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “J93 2 ”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "[“J93 2 ”] Sim ",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Nome do signatário do termo de verificação .",
+     "name": "IDENT_NOM_T",
+     "num": 2,
+     "obrig": "- Sim ",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Qualificação do assinante do termo de verificação , conforme tabela.",
+     "name": "IDENT_QUALIF_T",
+     "num": 4,
+     "obrig": "- Sim [REGRA_TABELA_ ASSINANTE_DESC]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código de qualificação do assinante do termo de verificação , conforme tabela.",
+     "name": "COD_ASSIN_T",
+     "num": 5,
+     "obrig": "- Sim [REGRA_QUALIF_ INVALIDA _ASS_TERMO ]",
+     "tam": "003",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Número de inscrição do contabilista no Conselho Regional de Contabilidade.",
+     "name": "IND_CRC_T",
+     "num": 6,
+     "obrig": "- Não [REGRA_OBRIGATORIO_ ASS_TERMO ]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Email do signatário.",
+     "name": "EMAIL_T",
+     "num": 7,
+     "obrig": "- Não [ REGRA_OBRIGATORIO_ ASS_TERMO]",
+     "tam": "060",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Telefone do signatário.",
+     "name": "FONE_T",
+     "num": 8,
+     "obrig": "- Não [ REGRA_OBRIGATORIO_ ASS_TERMO]",
+     "tam": "014",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicação da unidade da federação que expediu o CRC.",
+     "name": "UF_CRC_T",
+     "num": 9,
+     "obrig": "- Não [REGRA_TABELA_UF] [ REGRA_OBRIGATORIO_ ASS_TERMO]",
+     "tam": "002",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Número da Certidão de Regularidade Profissional do Contador no seguinte formato: UF/ano/número",
+     "name": "NUM_SEQ_CRC_T",
+     "num": 10,
+     "obrig": "- Não [REGRA_VALIDA_FORMATO _SEQUENCIAL_CRC] [REGRA_ADV _ASS _ CONTADOR _TERMO ]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Data de validade da Certidão de Regularidade Profissional do Contador",
+     "name": "DT_CRC_T",
+     "num": 11,
+     "obrig": "- Não [REGRA_ADV_ASS_ CONTADOR_TERMO]",
+     "tam": "008",
+     "type": "N",
+     "valid_values": []
+    }
+   ],
+   "level": 3,
+   "occurrence": "0-2 por arquivo",
+   "title": "Signatários do Termo de Verificação para Fins de Substituição da ECD186"
+  },
+  "J935": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “J935”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "[“J935”] Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    }
+   ],
+   "level": 3,
+   "occurrence": "Vários por arquivo",
+   "title": "Identificação dos Auditores Independentes189"
+  },
+  "J990": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “J990”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "\"J990\" Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Quantidade total de linhas do Bloco J.",
+     "name": "QTD_LIN_J",
+     "num": 2,
+     "obrig": "- Sim [REGRA_QTD_LIN_ BLOCOJ]",
+     "tam": "-",
+     "type": "N",
+     "valid_values": []
+    }
+   ],
+   "level": 1,
+   "occurrence": "Um por arquivo",
+   "title": "Encerramento do Bloco J190"
+  },
+  "K001": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “K001”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "“K001” Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador de movimento: 0- Bloco com dados informados; 1- Bloco sem dados informados.",
+     "name": "IND_DAD",
+     "num": 2,
+     "obrig": "[0,1] Sim -",
+     "tam": "001",
+     "type": "N",
+     "valid_values": []
+    }
+   ],
+   "level": 1,
+   "occurrence": "Um por arquivo",
+   "title": "Abertura do Bloco K191"
+  },
+  "K030": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “K030”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "“K030” Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Data inicial do período consolidado.",
+     "name": "DT_INI",
+     "num": 2,
+     "obrig": "- Sim -",
+     "tam": "008",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Data final do período consolidado.",
+     "name": "DT_FIN",
+     "num": 3,
+     "obrig": "- Sim [REGRA_DATA_MAIOR_INICIAL _CONS] [REGRA_IGUAL_DT_FIN _REG0000] [REGRA_PERIODO_CONS]",
+     "tam": "008",
+     "type": "N",
+     "valid_values": []
+    }
+   ],
+   "level": 2,
+   "occurrence": "Um por arquivo",
+   "title": "Período da Escrituração Contábil Consolidada192"
+  },
+  "K100": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “K100”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "“K100” Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código do país da empresa, conforme tabela do Banco Central do Brasil.",
+     "name": "COD_PAIS",
+     "num": 2,
+     "obrig": "Tabela externa PAIS_SISCOMEX Sim [REGRA_TABELA _PAISES]",
+     "tam": "005",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código de identificação da empresa participante.",
+     "name": "EMP_COD",
+     "num": 3,
+     "obrig": "- Sim -",
+     "tam": "004",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "CNPJ (somente os 8 primeiros dígitos).",
+     "name": "CNPJ",
+     "num": 4,
+     "obrig": "- Não [REGRA_OBRIGATORIO_ CNPJ_BRASIL]",
+     "tam": "008",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Nome empresarial.",
+     "name": "NOME",
+     "num": 5,
+     "obrig": "- Sim ",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "004",
+     "description": "Percentual de participação total do conglomerado na empresa no final do período consolidado . Observação: Neste campo, deve ser informado o percentual de participação acionária da empresa titular da EC D .",
+     "name": "PER_PART",
+     "num": 6,
+     "obrig": "- Sim [REGRA_PERC_MENOR _IGUAL_100] [REGRA_MAIOR _ IGUAL_ _ZERO]",
+     "tam": "008",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Evento societário ocorrido no período: S - Sim N – Não",
+     "name": "EVENTO",
+     "num": 7,
+     "obrig": "[S;N] Sim -",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "004",
+     "description": "Percentual de consolidação da empresa no final do período consolidado: Informar o percentual do resultado da empresa que foi para a consolidação.",
+     "name": "PER_CONS",
+     "num": 8,
+     "obrig": "- Sim [REGRA_PERC_MENOR _IGUAL_100] [REGRA_MAIOR_ IGUAL _ZERO]",
+     "tam": "008",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Data inicial do período da escrituração contábil da empresa que foi consolidada.",
+     "name": "DATA_INI_EMP",
+     "num": 9,
+     "obrig": "- Sim [REGRA_CONSOLIDADA_ INICIO_DIFERENTE] [REGRA_ANO_IGUAL_ _ANTERIOR_K030]",
+     "tam": "008",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Data final do período da escrituração contábil da empresa que foi consolidada",
+     "name": "DATA_FIN_EMP",
+     "num": 10,
+     "obrig": "- Sim [REGRA_DATA_FIN_ MAIOR _IGUAL ] [REGRA_CONSOLIDADA_ FINAL_DIFERENTE] [REGRA_PERIODO_CONS] [REGRA_ANO_IGUAL_ _ANTERIOR_K030]",
+     "tam": "008",
+     "type": "N",
+     "valid_values": []
+    }
+   ],
+   "level": 3,
+   "occurrence": "Vários por arquivo",
+   "title": "Relação das Empresas Consolidadas194"
+  },
+  "K110": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “K110”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "“K110” Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Evento societário ocorrido no período: 1 – Aquisição 2 – Alienação 3 – Fusão 4 – Cisão Parcial 5 – Cisão Total 6 – Incorporação 7 – Extinção 8 – Constituição",
+     "name": "EVENTO",
+     "num": 2,
+     "obrig": "[1;2;3;4;5;6;7;8] Sim -",
+     "tam": "001",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Data do evento societário.",
+     "name": "DT_EVENTO",
+     "num": 3,
+     "obrig": "- Sim [ REGRA_ANO_IGUAL_ ANTERIOR_POSTERIOR_ K030 ]",
+     "tam": "008",
+     "type": "N",
+     "valid_values": []
+    }
+   ],
+   "level": 4,
+   "occurrence": "Vários por arquivo",
+   "title": "Relação dos Eventos Societários198"
+  },
+  "K115": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “K115”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "“K115” Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código da empresa envolvida na operação",
+     "name": "EMP_COD_PART",
+     "num": 2,
+     "obrig": "- Sim [REGRA_EXISTE_EMP_COD_K100]",
+     "tam": "004",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Condição da empresa relacionada à operação: 1 – Sucessora; 2 – Adquirente; 3 – Alienante.",
+     "name": "COND_PART",
+     "num": 3,
+     "obrig": "[1;2;3] Sim [REGRA_CONDICAO_COMPATIVEL]",
+     "tam": "001",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "004",
+     "description": "Percentual da empresa participante envolvida na operação",
+     "name": "PER_EVT",
+     "num": 4,
+     "obrig": "- Sim [REGRA_PERC_MENOR_IGUAL_100]",
+     "tam": "008",
+     "type": "N",
+     "valid_values": []
+    }
+   ],
+   "level": 5,
+   "occurrence": "Vários por arquivo",
+   "title": "Empresas Participantes do Evento Societário200"
+  },
+  "K200": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “K200”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "“K200” Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código da natureza da conta/grupo de contas, conforme tabela publicada pelo Sped.",
+     "name": "COD_NAT",
+     "num": 2,
+     "obrig": "- Sim [REGRA_TABELA_NATUREZA]",
+     "tam": "002",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador do tipo de conta: S - Sintética (grupo de contas); A - Analítica (conta).",
+     "name": "IND_CTA",
+     "num": 3,
+     "obrig": "[S;A] Sim -",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Nível da conta",
+     "name": "NIVEL",
+     "num": 4,
+     "obrig": "- Sim [REGRA_MAIOR_QUE_UM] [REGRA_ANALITICA_NIVEL_2]",
+     "tam": "-",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código da conta",
+     "name": "COD_CTA",
+     "num": 5,
+     "obrig": "- Sim ",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código da conta superior",
+     "name": "COD_CTA_SUP",
+     "num": 6,
+     "obrig": "- Não [REGRA_COD_CTA_ SUP_OBRIGATORIO] [REGRA_CONTA_SUPERIOR_ NAO_SE_APLICA] [REGRA_CTA_CONSOLIDADA_ DE_NIVEL_SUPERIOR_INVALIDA]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Nome da conta",
+     "name": "CTA",
+     "num": 7,
+     "obrig": "- Sim ",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    }
+   ],
+   "level": 2,
+   "occurrence": "Vários por arquivo",
+   "title": "Plano de Contas Consolidado202"
+  },
+  "K210": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “K210”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "“K210” Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código de identificação da empresa participante",
+     "name": "COD_EMP",
+     "num": 2,
+     "obrig": "- Sim [REGRA_EXISTE_EMP_COD_K100]",
+     "tam": "004",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código da conta da empresa participante",
+     "name": "COD_CTA_EMP",
+     "num": 3,
+     "obrig": "- Sim ",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    }
+   ],
+   "level": 3,
+   "occurrence": "Vários por arquivo",
+   "title": "Mapeamento para Planos de Contas das Empresas Consolidadas205"
+  },
+  "K300": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “K300”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "“K300” Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código da conta consolidada",
+     "name": "COD_CTA",
+     "num": 2,
+     "obrig": "- Sim [REGRA_EXISTE_K200_ANALITICA]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "02",
+     "description": "Valor absoluto aglutinado",
+     "name": "VAL_AG",
+     "num": 3,
+     "obrig": "- Sim -",
+     "tam": "019",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador da situação do valor aglutinado: D – Devedor C – Credor",
+     "name": "IND_VAL_AG",
+     "num": 4,
+     "obrig": "[D;C] Sim -",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "02",
+     "description": "Valor absoluto das eliminações",
+     "name": "VAL_EL",
+     "num": 5,
+     "obrig": "- Sim [REGRA_SOMATORIO_ VALOR_ELIMINACOES]",
+     "tam": "019",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador da situação do valor eliminado: D – Devedor C – Credor",
+     "name": "IND_VAL_EL",
+     "num": 6,
+     "obrig": "[D;C] Sim -",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "02",
+     "description": "Valor absoluto consolidado: VAL_CS = VAL_AG – VAL_EL",
+     "name": "VAL_CS",
+     "num": 7,
+     "obrig": "- Sim [REGRA_CALCULO_ VALOR_CONSOLIDADO]",
+     "tam": "019",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador da situação do valor consolidado: D – Devedor C – Credor",
+     "name": "IND_VAL_CS",
+     "num": 8,
+     "obrig": "[D;C] Sim -",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    }
+   ],
+   "level": 3,
+   "occurrence": "Vários por arquivo",
+   "title": "Saldos das Contas Consolidadas206"
+  },
+  "K310": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “K310”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "“K310” Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código da empresa detentora do valor aglutinado que foi eliminado",
+     "name": "EMP_COD_PARTE",
+     "num": 2,
+     "obrig": "- Sim [REGRA_EXISTE_EMP_COD_K100]",
+     "tam": "004",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "02",
+     "description": "Parcela do valor eliminado total",
+     "name": "VALOR",
+     "num": 3,
+     "obrig": "- Sim [REGRA_SOMATORIO_ VALOR_CONTRAPARTIDA]",
+     "tam": "019",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador da situação do valor eliminado: D – Devedor C – Credor",
+     "name": "IND_VALOR",
+     "num": 4,
+     "obrig": "[D;C] Sim -",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    }
+   ],
+   "level": 4,
+   "occurrence": "Vários por arquivo",
+   "title": "Empresas Detentoras das Parcelas do Valor Eliminado Total208"
+  },
+  "K315": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “K315”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "“K315” Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código da empresa da contrapartida",
+     "name": "EMP_COD_CONTRA",
+     "num": 2,
+     "obrig": "- Sim [REGRA_EXISTE_EMP_ COD_K100] [REGRA_EMP_COD_CONTRA_ DIFERENTE_EMP_COD_PARTE]",
+     "tam": "004",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Código da conta consolidada da contrapartida",
+     "name": "COD_CONTRA",
+     "num": 3,
+     "obrig": "- Sim [REGRA_COD_CTA_DIFERENTE_ COD_CONTRA] [REGRA_EXISTE_COD _CTA_K300]",
+     "tam": "-",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "02",
+     "description": "Parcela da contrapartida do valor eliminado total",
+     "name": "VALOR",
+     "num": 4,
+     "obrig": "- Sim [REGRA_MAIOR_QUE_ZERO] [REGRA_SOMATORIO_ VALOR_CONTRAPARTIDA]",
+     "tam": "019",
+     "type": "N",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Indicador da situação do valor eliminado: D – Devedor C – Credor",
+     "name": "IND_VALOR",
+     "num": 5,
+     "obrig": "[D;C] Sim -",
+     "tam": "001",
+     "type": "C",
+     "valid_values": []
+    }
+   ],
+   "level": 5,
+   "occurrence": "Vários por arquivo",
+   "title": "Empresas Contrapartes das Parcelas do Valor Eliminado Total209"
+  },
+  "K990": {
+   "fields": [
+    {
+     "dec": "-",
+     "description": "Texto fixo contendo “K990”.",
+     "name": "REG",
+     "num": 1,
+     "obrig": "\"K990\" Sim -",
+     "tam": "004",
+     "type": "C",
+     "valid_values": []
+    },
+    {
+     "dec": "-",
+     "description": "Quantidade total de linhas do Bloco K.",
+     "name": "QTD_LIN_K",
+     "num": 2,
+     "obrig": "- Sim [REGRA_QRD_LIN_ BLOCOK]",
+     "tam": "-",
+     "type": "N",
+     "valid_values": []
+    }
+   ],
+   "level": 1,
+   "occurrence": "Um por arquivo",
+   "title": "Encerramento do Bloco K211"
+  }
+ }
+}
