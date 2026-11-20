@@ -318,7 +318,21 @@ def build_parser() -> argparse.ArgumentParser:  # noqa: PLR0915
 def main(argv: Sequence[str] | None = None) -> int:
     """CLI entry point."""
     parser = build_parser()
-    args = parser.parse_args(argv)
+    args, extra = parser.parse_known_args(argv)
+    # Python < 3.12 argparse binds the optional positional ``saida`` (empty)
+    # together with ``arquivo`` and then rejects a value given after ``--to``
+    # (``sped export f.txt --to csv out``). Recover it here.
+    if (
+        extra
+        and getattr(args, "func", None) is _cmd_export
+        and args.saida is None
+        and len(extra) == 1
+        and not extra[0].startswith("-")
+    ):
+        args.saida = extra[0]
+        extra = []
+    if extra:
+        parser.error(f"unrecognized arguments: {' '.join(extra)}")
     try:
         return int(args.func(args))
     except UsageError as exc:
