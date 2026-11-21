@@ -30,3 +30,6 @@ Thumbs.db
 # Project scratch
 tmp/
 .sped-cache/
+
+# local agent config
+opencode.json
